@@ -6,6 +6,8 @@
 using namespace std;
 
 #define ID_ETYKIETA_LICZBA_LITEREK 10
+#define ID_ETYKIETA_PUNKTY_GRACZA 11
+#define ID_ETYKIETA_PUNKTY_KOMPUTERA 12
 
 
 
@@ -39,6 +41,10 @@ HWND staticTextLiczbaLiterek;
 HWND staticTextEtykietaTwojeLitery;
 HWND staticTextTwojeLitery;
 HWND listViewRozgrywka;
+HWND staticTextEtykietaPunktyGracza;
+HWND staticTextPunktyGracza;
+HWND staticTextEtykietaPunktyKomputera;
+HWND staticTextPunktyKomputera;
 RECT rcl; // list view bo nale¿y co grupy Common Controls
 #pragma endregion Deklaracja kontrolek okna
 
@@ -129,7 +135,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	staticTextEtykietaTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_LEFT, 50, 500, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+		SS_LEFT, 50, 520, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
 	SetWindowText(staticTextEtykietaTwojeLitery, "Twoje literki:");
 
 	staticTextTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
@@ -141,7 +147,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	//GetClientRect(OknoAplikacji, &rcl);
+	
+
+	staticTextEtykietaPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_LEFT, 600, 170, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	SetWindowText(staticTextEtykietaPunktyGracza, "Punkty gracza:");
+
+	staticTextPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_CENTER, 600, 200, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_GRACZA, hInstance, NULL);
+	//--------------------------------------------------------------------------------------------------------------------------------
+	int pktGracz = 120;
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_GRACZA, pktGracz, true);	//---!!!---Ustwaienie etyliety punkty gracza z inta ---!!!---
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+	staticTextEtykietaPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_LEFT, 600, 250, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	SetWindowText(staticTextEtykietaPunktyKomputera, "Punkty gracza:");
+
+	staticTextPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_CENTER, 600, 280, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_KOMPUTERA, hInstance, NULL);
+	//--------------------------------------------------------------------------------------------------------------------------------
+	int pktKomputer = 20;
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_KOMPUTERA, pktKomputer, true);	//---!!!---Ustwaienie etyliety punkty komputera z inta ---!!!---
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+
 	listViewRozgrywka = CreateWindowEx(0, WC_LISTVIEW, NULL, WS_CHILD | WS_VISIBLE | LVS_REPORT |
 		LVS_EDITLABELS, 50, 50, 500, 450,
 		OknoAplikacji, (HMENU)1000, hInstance, NULL);
@@ -166,7 +198,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ListView_InsertColumn(listViewRozgrywka, 2, &lvc);
 
 	lvc.iSubItem = 3;
-	lvc.cx = 75;
+	lvc.cx = 55;  // zmniejszone ¿eby siê nie pojawia³ scroll poziomy
 	lvc.pszText = "Punkty";
 	ListView_InsertColumn(listViewRozgrywka, 3, &lvc);
 #pragma endregion Kolumny w listView
@@ -180,6 +212,48 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
 	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
 	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+
 
 
 #pragma endregion Inicjalizacja kontrolek okna
