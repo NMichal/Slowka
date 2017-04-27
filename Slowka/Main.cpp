@@ -1,6 +1,7 @@
 #include <iostream> 
 #include <windows.h>
 #include <string> 
+#include <commctrl.h>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ using namespace std;
 // Licznik ile pozosta³o literek w "worku"
 // lowercase - przy pobieraniu z textboxa (sprawdziæ czy wszystko w s³owniku bêdzie ma³e)
 
+//wylaczyc maksymalizacje
 // byæ mo¿e póŸniej dodaæ ID_PRZYCISKOW 
 
 
@@ -34,7 +36,37 @@ HWND buttonZatwierdz;
 HWND textBoxWpisaneSlowo;
 HWND staticTextEtykietaLiczbaLiterek;
 HWND staticTextLiczbaLiterek;
+HWND staticTextEtykietaTwojeLitery;
+HWND staticTextTwojeLitery;
+HWND listViewRozgrywka;
+RECT rcl; // list view bo nale¿y co grupy Common Controls
 #pragma endregion Deklaracja kontrolek okna
+
+
+///Funkcja wstawiajaca do listView wpis
+void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty) 
+{
+	LVITEM lvi;
+	lvi.mask = LVIF_TEXT;
+
+	string tura_str = to_string(tura);
+	LPSTR tura_lpstr = const_cast<char *>(tura_str.c_str());
+	lvi.pszText = tura_lpstr;
+	lvi.iItem = tura - 1;
+	lvi.iSubItem = 0;
+
+	ListView_InsertItem(listViewRozgrywka, &lvi);
+
+	LPSTR osoba_lpstr = const_cast<char *>(osoba.c_str());
+	ListView_SetItemText(listViewRozgrywka,tura-1, 1, osoba_lpstr);
+
+	LPSTR slowo_lpstr = const_cast<char *>(slowo.c_str());
+	ListView_SetItemText(listViewRozgrywka, tura - 1, 2, slowo_lpstr);
+
+	string punkty_str = to_string(punkty);
+	LPSTR punkty_lpstr = const_cast<char *>(punkty_str.c_str());
+	ListView_SetItemText(listViewRozgrywka, tura - 1, 3, punkty_lpstr);
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -67,7 +99,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND OknoAplikacji;
 
 	OknoAplikacji = CreateWindowEx(WS_EX_CLIENTEDGE, NazwaKlasy, "Oto okienko", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 750, 700, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, 800, 700, NULL, NULL, hInstance, NULL);
 
 	if (OknoAplikacji == NULL)
 	{
@@ -91,9 +123,64 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	staticTextLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_CENTER, 600, 80, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_LICZBA_LITEREK, hInstance, NULL);
-
+	//--------------------------------------------------------------------------------------------------------------------------------
 	int i = 10;
 	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, i, true);	//---!!!---Ustwaienie etyliety liczby literek z inta ---!!!---
+	//--------------------------------------------------------------------------------------------------------------------------------
+
+	staticTextEtykietaTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_LEFT, 50, 500, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	SetWindowText(staticTextEtykietaTwojeLitery, "Twoje literki:");
+
+	staticTextTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_LEFT, 50, 550, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+	string test = "A B C D E F";
+	LPCSTR lpcstr = test.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	SetWindowText(staticTextTwojeLitery, lpcstr);
+
+	//--------------------------------------------------------------------------------------------------------------------------------
+	//GetClientRect(OknoAplikacji, &rcl);
+	listViewRozgrywka = CreateWindowEx(0, WC_LISTVIEW, NULL, WS_CHILD | WS_VISIBLE | LVS_REPORT |
+		LVS_EDITLABELS, 50, 50, 500, 450,
+		OknoAplikacji, (HMENU)1000, hInstance, NULL);
+
+#pragma region
+	LVCOLUMN lvc;
+	lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+	lvc.iSubItem = 0;
+	lvc.cx = 75;
+	lvc.pszText = "Tura";
+	ListView_InsertColumn(listViewRozgrywka, 0, &lvc);
+
+	lvc.iSubItem = 1;
+	lvc.cx = 175;
+	lvc.pszText = "Osoba";
+	ListView_InsertColumn(listViewRozgrywka, 1, &lvc);
+
+	lvc.iSubItem = 2;
+	lvc.cx = 175;
+	lvc.pszText = "S³owo";
+	ListView_InsertColumn(listViewRozgrywka, 2, &lvc);
+
+	lvc.iSubItem = 3;
+	lvc.cx = 75;
+	lvc.pszText = "Punkty";
+	ListView_InsertColumn(listViewRozgrywka, 3, &lvc);
+#pragma endregion Kolumny w listView
+
+
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+
 
 #pragma endregion Inicjalizacja kontrolek okna
 
