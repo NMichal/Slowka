@@ -2,6 +2,12 @@
 #include <windows.h>
 #include <string> 
 #include <commctrl.h>
+#include <list>
+#include <ctime>
+
+#include "Slownik.h"
+#include "Gra.h"
+
 
 using namespace std;
 
@@ -24,6 +30,9 @@ using namespace std;
 
 //wylaczyc maksymalizacje
 // byæ mo¿e póŸniej dodaæ ID_PRZYCISKOW 
+
+list<char> literyKomputera;
+list<char> literyGracza;
 
 
 
@@ -142,9 +151,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SS_LEFT, 50, 550, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	string test = "A B C D E F";
-	LPCSTR lpcstr = test.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
-	SetWindowText(staticTextTwojeLitery, lpcstr);
+	//string test = "A B C D E F";
+	//LPCSTR lpcstr = test.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	//SetWindowText(staticTextTwojeLitery, lpcstr);
 
 	//--------------------------------------------------------------------------------------------------------------------------------
 	
@@ -253,13 +262,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
 	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
 	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
-
-
-
 #pragma endregion Inicjalizacja kontrolek okna
 
+
+	//----------------------------------Tutaj rozpoczynamy gre-------------------------------------------------------------------
+
+	//ZaczytajSlownik();
+	//bool elo = SprawdzSlowo("koñ");
+	//bool elo = SprawdzSlowo2("auto");
+
+	//while (1) 
+	//{
+
+		//liczbaLiter = LiczbaPozostalychLiter();
+		//SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, liczbaLiter, true);
+
+	//}
+	srand(time(NULL));
+	while (literyKomputera.size() < 9)
+		literyKomputera.push_back(LosujLitere());
+
+	while (literyGracza.size() < 9)
+		literyGracza.push_back(LosujLitere());
+
+	string strLiteryGracza = "";
+	for (auto v : literyGracza)
+	{
+		strLiteryGracza += v; 
+		strLiteryGracza += " ";			
+	}
+
+	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	SetWindowText(staticTextTwojeLitery, lpcstr);
+
+
+	//------------------------------------------------------------------------------------------------------------------------------
 	ShowWindow(OknoAplikacji, nCmdShow); // Poka¿ okienko...
 	UpdateWindow(OknoAplikacji);
+
+
 
 	// Pêtla komunikatów - klikniêcie myszk¹, wciœniêcie klawisza czy zamkniêcie okna
 	while (GetMessage(&Komunikat, NULL, 0, 0)) // Gdy robimy jak¹œ czynnoœæ, która wi¹¿e siê z powstaniem jakiejœ wiadomoœci, np. poruszamy mysz¹, wiadomoœæ posy³ana jest do kolejki wiadomoœci, sk¹d zabiera j¹ GetMessage. 
@@ -283,8 +324,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_COMMAND://obs³uga naszego przycisku buttonWymienLiterki
-		if ((HWND)lParam == buttonWymienLiterki)
-			MessageBox(hwnd, "Nacisn¹³eœ przycisk Wymien literki!", "Ha!", MB_ICONINFORMATION);
+		if ((HWND)lParam == buttonWymienLiterki) {
+			literyGracza.clear();
+
+			while (literyGracza.size() < 9)
+				literyGracza.push_back(LosujLitere());
+
+			string strLiteryGracza = "";
+			for (auto v : literyGracza)
+			{
+				strLiteryGracza += v;
+				strLiteryGracza += " ";
+			}
+
+			LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+			SetWindowText(staticTextTwojeLitery, lpcstr);
+		}
 		if ((HWND)lParam == buttonZatwierdz)
 			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
 		break;
