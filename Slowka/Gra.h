@@ -9,6 +9,7 @@ using namespace std;
 //int LiczbaPozostalychLiter();
 
 char LosujLitere();
+bool CzyMoznaUtworzycSlowo(string slowo, string litery);
 
 
 

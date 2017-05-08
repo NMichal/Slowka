@@ -8,7 +8,7 @@
 #include "Slownik.h"
 #include "Gra.h"
 
-
+//Zrobiæ na dowoln¹ liczbe graczy
 using namespace std;
 
 #define ID_ETYKIETA_LICZBA_LITEREK 10
@@ -33,6 +33,9 @@ using namespace std;
 
 list<char> literyKomputera;
 list<char> literyGracza;
+int tura = 1;
+int *ptura = &tura;
+
 
 
 
@@ -59,7 +62,7 @@ RECT rcl; // list view bo nale¿y co grupy Common Controls
 
 
 ///Funkcja wstawiajaca do listView wpis
-void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty) 
+void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 {
 	LVITEM lvi;
 	lvi.mask = LVIF_TEXT;
@@ -73,7 +76,7 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 	ListView_InsertItem(listViewRozgrywka, &lvi);
 
 	LPSTR osoba_lpstr = const_cast<char *>(osoba.c_str());
-	ListView_SetItemText(listViewRozgrywka,tura-1, 1, osoba_lpstr);
+	ListView_SetItemText(listViewRozgrywka, tura - 1, 1, osoba_lpstr);
 
 	LPSTR slowo_lpstr = const_cast<char *>(slowo.c_str());
 	ListView_SetItemText(listViewRozgrywka, tura - 1, 2, slowo_lpstr);
@@ -81,6 +84,8 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 	string punkty_str = to_string(punkty);
 	LPSTR punkty_lpstr = const_cast<char *>(punkty_str.c_str());
 	ListView_SetItemText(listViewRozgrywka, tura - 1, 3, punkty_lpstr);
+	
+	(*ptura)++;
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -156,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//SetWindowText(staticTextTwojeLitery, lpcstr);
 
 	//--------------------------------------------------------------------------------------------------------------------------------
-	
+
 
 	staticTextEtykietaPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 600, 170, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
@@ -213,31 +218,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma endregion Kolumny w listView
 
 
-	RozgrywkaInsert(1, "Michal", "Siema", 10);
-	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
-	RozgrywkaInsert(3, "Michal", "Kosz", 15);
-	RozgrywkaInsert(4, "Komputer", "Kot", 3);
-	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
-	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
-	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
-	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
-
-	RozgrywkaInsert(1, "Michal", "Siema", 10);
-	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
-	RozgrywkaInsert(3, "Michal", "Kosz", 15);
-	RozgrywkaInsert(4, "Komputer", "Kot", 3);
-	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
-	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
-	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
-	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
-	RozgrywkaInsert(1, "Michal", "Siema", 10);
-	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
-	RozgrywkaInsert(3, "Michal", "Kosz", 15);
-	RozgrywkaInsert(4, "Komputer", "Kot", 3);
-	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
-	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
-	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
-	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(*ptura, "Michal", "Siema", 10);
+	RozgrywkaInsert(*ptura, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(*ptura, "Michal", "Kosz", 15);
+	RozgrywkaInsert(*ptura, "Komputer", "Kot", 3);
+	RozgrywkaInsert(*ptura, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(*ptura, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(*ptura, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(*ptura, "Komputer", "Laptop", 8);
+	/*
 	RozgrywkaInsert(1, "Michal", "Siema", 10);
 	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
 	RozgrywkaInsert(3, "Michal", "Kosz", 15);
@@ -262,6 +251,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
 	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
 	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(1, "Michal", "Siema", 10);
+	RozgrywkaInsert(2, "Komputer", "Tramwaj", 5);
+	RozgrywkaInsert(3, "Michal", "Kosz", 15);
+	RozgrywkaInsert(4, "Komputer", "Kot", 3);
+	RozgrywkaInsert(5, "Michal", "Jogurtowy", 22);
+	RozgrywkaInsert(6, "Komputer", "Tabletka", 19);
+	RozgrywkaInsert(7, "Michal", "£y¿ka", 16);
+	RozgrywkaInsert(8, "Komputer", "Laptop", 8);
+	*/
 #pragma endregion Inicjalizacja kontrolek okna
 
 
@@ -288,8 +294,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	string strLiteryGracza = "";
 	for (auto v : literyGracza)
 	{
-		strLiteryGracza += v; 
-		strLiteryGracza += " ";			
+		strLiteryGracza += v;
+		strLiteryGracza += " ";
 	}
 
 	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
@@ -340,8 +346,49 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
 			SetWindowText(staticTextTwojeLitery, lpcstr);
 		}
-		if ((HWND)lParam == buttonZatwierdz)
+		if ((HWND)lParam == buttonZatwierdz) 
+		{
 			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
+
+			DWORD dlugosc = GetWindowTextLength(textBoxWpisaneSlowo);
+			LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
+			GetWindowText(textBoxWpisaneSlowo, Bufor, dlugosc + 1);
+
+			string wpisaneSlowo(Bufor);
+
+			string strLiteryGracza = "";
+			for (auto v : literyGracza)
+			{
+				strLiteryGracza += v;
+			}
+			// Najpierw sprawdziæ czy z liter mo¿na u³o¿yæ taki wyraz
+			if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza)) //Nie dzia³a przepuszcza wszystko
+			{
+				bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
+				if (istniejeSlowo)
+				{
+					MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
+					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, 10);
+					///Wyczyœciæ pole wpisaneSlowo
+				}
+				else
+				{
+					MessageBox(hwnd, "Nie ma takiego slowa", "Ha!", MB_ICONINFORMATION);
+				}
+			}///prawie gotowe, trzeba tylko podaæ litery które mamy i sprawdziæ ;) 
+			// Mo¿na tak¿e u¿yæ tego do generowania przez PC tylko zamiast wpisaneSlowo daæ slowo ze slownika
+			else
+			{
+				MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
+			}
+			//bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
+			//if (istniejeSlowo)
+			//	MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
+			//else
+			//{
+			//	MessageBox(hwnd, "Nie ma takiego slowa", "Ha!", MB_ICONINFORMATION);
+			//}
+		}
 		break;
 
 	default:
