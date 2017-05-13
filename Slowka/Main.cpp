@@ -48,6 +48,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 HWND buttonWymienLiterki;
 HWND buttonZatwierdz;
+HWND buttonPomin;
 HWND textBoxWpisaneSlowo;
 HWND staticTextEtykietaLiczbaLiterek;
 HWND staticTextLiczbaLiterek;
@@ -131,6 +132,12 @@ void WymienLiteryGraczaMain()
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 }
 
+void PominRuch(HWND hwnd)
+{
+	RozgrywkaInsert(*ptura, "gracz", "--------", 0);
+	RuchKomputera(hwnd);
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
@@ -162,7 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	HWND OknoAplikacji;
 
 	OknoAplikacji = CreateWindowEx(WS_EX_CLIENTEDGE, NazwaKlasy, "Oto okienko", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 800, 700, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, 950, 700, NULL, NULL, hInstance, NULL);
 
 	if (OknoAplikacji == NULL)
 	{
@@ -176,6 +183,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	buttonZatwierdz = CreateWindowEx(0, "BUTTON", "Zatwierdz", WS_CHILD | WS_VISIBLE,
 		350, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+
+	buttonPomin = CreateWindowEx(0, "BUTTON", "Pomin ruch", WS_CHILD | WS_VISIBLE,
+		750, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
 
 	textBoxWpisaneSlowo = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		50, 600, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
@@ -260,14 +270,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ListView_InsertColumn(listViewRozgrywka, 3, &lvc);
 #pragma endregion Kolumny w listView
 
-	RozgrywkaInsert(*ptura, "Michal", "Siema", 10);
+	/*RozgrywkaInsert(*ptura, "Michal", "Siema", 10);
 	RozgrywkaInsert(*ptura, "Komputer", "Tramwaj", 5);
 	RozgrywkaInsert(*ptura, "Michal", "Kosz", 15);
 	RozgrywkaInsert(*ptura, "Komputer", "Kot", 3);
 	RozgrywkaInsert(*ptura, "Michal", "Jogurtowy", 22);
 	RozgrywkaInsert(*ptura, "Komputer", "Tabletka", 19);
 	RozgrywkaInsert(*ptura, "Michal", "£y¿ka", 16);
-	RozgrywkaInsert(*ptura, "Komputer", "Laptop", 8);
+	RozgrywkaInsert(*ptura, "Komputer", "Laptop", 8);*/
 
 #pragma endregion Inicjalizacja kontrolek okna
 
@@ -395,6 +405,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
 			}
+		}
+		if ((HWND)lParam == buttonPomin) 
+		{
+			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
+			PominRuch(hwnd);
 		}
 		break;
 
