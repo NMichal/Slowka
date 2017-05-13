@@ -33,6 +33,8 @@ using namespace std;
 
 list<char> literyKomputera;
 list<char> literyGracza;
+int punktyKomputera = 0;
+int punktyGracza = 0;
 int tura = 1;
 int *ptura = &tura;
 
@@ -50,8 +52,8 @@ HWND buttonWymienLiterki;
 HWND buttonZatwierdz;
 HWND buttonPomin;
 HWND textBoxWpisaneSlowo;
-HWND staticTextEtykietaLiczbaLiterek;
-HWND staticTextLiczbaLiterek;
+//HWND staticTextEtykietaLiczbaLiterek;
+//HWND staticTextLiczbaLiterek;
 HWND staticTextEtykietaTwojeLitery;
 HWND staticTextTwojeLitery;
 HWND listViewRozgrywka;
@@ -109,7 +111,8 @@ void RuchKomputera(HWND hwnd)
 	string ulozoneSlowo = KomputerUkladaSlowo(strLiteryKomputera);
 	int punkty = PunktujSlowo(ulozoneSlowo);
 	RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, punkty);
-
+	punktyKomputera += punkty;
+	SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
 	//Musi tu wymieniaæ litery !
 }
 
@@ -160,7 +163,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// REJESTROWANIE KLASY OKNA
 	if (!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, "Wysoka Komisja odmawia rejestracji tego okna!", "Niestety...",
+		MessageBox(NULL, "Nie mozna zarejestrowac tego okna!", "Error",
 			MB_ICONEXCLAMATION | MB_OK);
 		return 1;
 	}
@@ -173,7 +176,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (OknoAplikacji == NULL)
 	{
-		MessageBox(NULL, "Okno odmówi³o przyjœcia na œwiat!", "Ale kicha...", MB_ICONEXCLAMATION);
+		MessageBox(NULL, "Nie udalo sie stworzyc okna aplikacji!", "Error", MB_ICONEXCLAMATION);
 		return 1;
 	}
 
@@ -190,16 +193,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	textBoxWpisaneSlowo = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		50, 600, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
 
-	staticTextEtykietaLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_LEFT, 600, 50, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
-	SetWindowText(staticTextEtykietaLiczbaLiterek, "Liczba pozosta³ych \n\tliterek:");
+	//staticTextEtykietaLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+	//	SS_LEFT, 600, 50, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	//SetWindowText(staticTextEtykietaLiczbaLiterek, "Liczba pozosta³ych \n\tliterek:");
 
-	staticTextLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_CENTER, 600, 80, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_LICZBA_LITEREK, hInstance, NULL);
-	//--------------------------------------------------------------------------------------------------------------------------------
-	int i = 10;
-	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, i, true);	//---!!!---Ustwaienie etyliety liczby literek z inta ---!!!---
-	//--------------------------------------------------------------------------------------------------------------------------------
+	//staticTextLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+	//	SS_CENTER, 600, 80, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_LICZBA_LITEREK, hInstance, NULL);
+	////--------------------------------------------------------------------------------------------------------------------------------
+	//int i = 10;
+	//SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, i, true);	//---!!!---Ustwaienie etyliety liczby literek z inta ---!!!---
+	////--------------------------------------------------------------------------------------------------------------------------------
 
 	staticTextEtykietaTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 50, 520, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
@@ -217,27 +220,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 	staticTextEtykietaPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_LEFT, 600, 170, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
-	SetWindowText(staticTextEtykietaPunktyGracza, "Punkty gracza:");
+		SS_LEFT, 750, 170, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	SetWindowText(staticTextEtykietaPunktyGracza, "Punkty Gracza:");
 
 	staticTextPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_CENTER, 600, 200, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_GRACZA, hInstance, NULL);
+		SS_CENTER, 750, 200, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_GRACZA, hInstance, NULL);
 	//--------------------------------------------------------------------------------------------------------------------------------
-	int pktGracz = 120;
-	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_GRACZA, pktGracz, true);	//---!!!---Ustwaienie etyliety punkty gracza z inta ---!!!---
+	//int pktGracz = 120;
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);	//---!!!---Ustwaienie etyliety punkty gracza z inta ---!!!---
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 
 
 	staticTextEtykietaPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_LEFT, 600, 250, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
-	SetWindowText(staticTextEtykietaPunktyKomputera, "Punkty gracza:");
+		SS_LEFT, 750, 250, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
+	SetWindowText(staticTextEtykietaPunktyKomputera, "Punkty Komputera:");
 
 	staticTextPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-		SS_CENTER, 600, 280, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_KOMPUTERA, hInstance, NULL);
+		SS_CENTER, 750, 280, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_KOMPUTERA, hInstance, NULL);
 	//--------------------------------------------------------------------------------------------------------------------------------
-	int pktKomputer = 20;
-	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_KOMPUTERA, pktKomputer, true);	//---!!!---Ustwaienie etyliety punkty komputera z inta ---!!!---
+	//int pktKomputer = 20;
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);	//---!!!---Ustwaienie etyliety punkty komputera z inta ---!!!---
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -385,6 +388,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
 					int punkty = PunktujSlowo(wpisaneSlowo);
 					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, punkty);
+					punktyGracza += punkty;
+					SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
 					///Wyczyœciæ pole wpisaneSlowo
 					//----->>>>>>>> Przekopiowane z przycisku WymienLiterki - trzeba zrobiæ osobn¹ funkjce wymien liteki <<<<<<<<<<<<<<<-----------------------------------
 					WymienLiteryGraczaMain();
