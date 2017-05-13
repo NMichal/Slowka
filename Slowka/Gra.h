@@ -12,6 +12,7 @@ char LosujLitere();
 bool CzyMoznaUtworzycSlowo(string slowo, string litery);
 string KomputerUkladaSlowo(string wylosowaneLitery);
 void WymienLitery();
+int PunktujSlowo(string slowo);
 
 
 

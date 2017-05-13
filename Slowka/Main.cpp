@@ -15,7 +15,7 @@ using namespace std;
 #define ID_ETYKIETA_PUNKTY_GRACZA 11
 #define ID_ETYKIETA_PUNKTY_KOMPUTERA 12
 
-
+//Pozmieniaæ teksty okien 
 
 ///mo¿emy sparsowaæ liniê œcie¿ki ¿eby dodaæ coœ ciekawego np. jakieœ cheaty - u³atwienia
 
@@ -45,6 +45,7 @@ MSG Komunikat;
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #pragma region
+
 HWND buttonWymienLiterki;
 HWND buttonZatwierdz;
 HWND textBoxWpisaneSlowo;
@@ -58,6 +59,7 @@ HWND staticTextPunktyGracza;
 HWND staticTextEtykietaPunktyKomputera;
 HWND staticTextPunktyKomputera;
 RECT rcl; // list view bo nale¿y co grupy Common Controls
+
 #pragma endregion Deklaracja kontrolek okna
 
 
@@ -91,6 +93,11 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 
 void RuchKomputera(HWND hwnd)
 {
+	literyKomputera.clear();
+
+	while (literyKomputera.size() < 9)	//Wymiana liter przed ruchem PC
+		literyKomputera.push_back(LosujLitere());
+
 	string strLiteryKomputera = "";
 	for (auto v : literyKomputera)
 	{
@@ -99,9 +106,29 @@ void RuchKomputera(HWND hwnd)
 	//Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
 	MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
 	string ulozoneSlowo = KomputerUkladaSlowo(strLiteryKomputera);
-	RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, 15);
+	int punkty = PunktujSlowo(ulozoneSlowo);
+	RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, punkty);
 
 	//Musi tu wymieniaæ litery !
+}
+
+///Zmieniæ na jedn¹ funkcjê dla gracza i PC (chocia¿ dla wielu graczy beda tylko jedne zmieniajace sie litery) oraz przeniesc do pliku Gra.cpp
+void WymienLiteryGraczaMain()
+{
+	literyGracza.clear();
+
+	while (literyGracza.size() < 9)
+		literyGracza.push_back(LosujLitere());
+
+	string strLiteryGracza = "";
+	for (auto v : literyGracza)
+	{
+		strLiteryGracza += v;
+		strLiteryGracza += " ";
+	}
+
+	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	SetWindowText(staticTextTwojeLitery, lpcstr);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -247,7 +274,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//----------------------------------Tutaj rozpoczynamy gre-------------------------------------------------------------------
 
-	//ZaczytajSlownik();
+	ZaczytajSlownik();
 	//bool elo = SprawdzSlowo("koñ");
 	//bool elo = SprawdzSlowo2("auto");
 
@@ -338,26 +365,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				strLiteryGracza += v;
 			}
-			// Najpierw sprawdziæ czy z liter mo¿na u³o¿yæ taki wyraz
-			if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza)) //Nie dzia³a przepuszcza wszystko
+
+			if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
 			{
-				bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
+				//bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
+				bool istniejeSlowo = SprawdzSlowo(wpisaneSlowo);
 				if (istniejeSlowo)
 				{
 					MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
-					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, 10);
+					int punkty = PunktujSlowo(wpisaneSlowo);
+					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, punkty);
 					///Wyczyœciæ pole wpisaneSlowo
-					
-					//string strLiteryKomputera = "";
-					//for (auto v : literyKomputera)
-					//{
-					//	strLiteryKomputera += v;
-					//}
-					////Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
-					//MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
-					//string ulozoneSlowo = KomputerUkladaSlowo(strLiteryGracza);
-					//RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, 15);
+					//----->>>>>>>> Przekopiowane z przycisku WymienLiterki - trzeba zrobiæ osobn¹ funkjce wymien liteki <<<<<<<<<<<<<<<-----------------------------------
+					WymienLiteryGraczaMain();
+					//-------------------->>>>>>>>>>>>>>>>>>>>>>----------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------
 
+
+					
+					////Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
 					RuchKomputera(hwnd);
 				}
 				else

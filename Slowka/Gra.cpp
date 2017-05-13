@@ -19,7 +19,7 @@ char LosujLitere()
 	return litery[index];
 }
 
-void WymienLitery() 
+void WymienLitery(list<char> litery) 
 {
 
 }
@@ -67,5 +67,28 @@ string KomputerUkladaSlowo(string wylosowaneLitery)
 	}
 }
 
+
+int PunktujSlowo(string slowo)
+{
+	int punkty = 0;
+	for (int i = 0; i < slowo.size(); i++)
+	{
+		int count = ZliczLitery(slowo, slowo[i]);
+
+		if (slowo[i] == 'a' || slowo[i] == 'e' || slowo[i] == 'i' || slowo[i] == 'n' || slowo[i] == 'o' || slowo[i] == 'r' || slowo[i] == 's' || slowo[i] == 'w' || slowo[i] == 'z')
+			punkty += count * 1;
+
+		if (slowo[i] == 'c' || slowo[i] == 'd' || slowo[i] == 'k' || slowo[i] == 'l' || slowo[i] == 'm' || slowo[i] == 'p' || slowo[i] == 't' || slowo[i] == 'y')
+			punkty += count * 2;
+
+		if (slowo[i] == 'b' || slowo[i] == 'g' || slowo[i] == 'h' || slowo[i] == 'j' || slowo[i] == 'u')
+			punkty += count * 3;
+
+		if (slowo[i] == 'f')
+			punkty += count * 5;
+	}
+
+	return punkty;
+}
 
 
