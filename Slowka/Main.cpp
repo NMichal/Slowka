@@ -39,6 +39,8 @@ int punktyKomputera = 0;
 int punktyGracza = 0;
 int tura = 1;
 int *ptura = &tura;
+int graDoTury = -1;
+int graDoLiczbyPunktow = -1;
 
 
 
@@ -123,7 +125,11 @@ void RuchKomputera(HWND hwnd)
 	RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, punkty);
 	punktyKomputera += punkty;
 	SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
-	//Musi tu wymieniaæ litery !
+	if (graDoLiczbyPunktow != -1 && punktyKomputera >= graDoLiczbyPunktow) 
+	{
+		MessageBox(hwnd, "Wygral Komputer ", "Ha!", MB_ICONINFORMATION);
+		ExitProcess(1);
+	}
 }
 
 ///Zmieniæ na jedn¹ funkcjê dla gracza i PC (chocia¿ dla wielu graczy beda tylko jedne zmieniajace sie litery) oraz przeniesc do pliku Gra.cpp
@@ -458,6 +464,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, punkty);
 					punktyGracza += punkty;
 					SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
+					if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow) 
+					{
+						MessageBox(hwnd, "Wygral Gracz ", "Ha!", MB_ICONINFORMATION);
+						//DestroyWindow(hwnd);
+						ExitProcess(1);
+					}
 					///Wyczyœciæ pole wpisaneSlowo
 					//----->>>>>>>> Przekopiowane z przycisku WymienLiterki - trzeba zrobiæ osobn¹ funkjce wymien liteki <<<<<<<<<<<<<<<-----------------------------------
 					WymienLiteryGraczaMain();
@@ -465,7 +477,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 
-					////Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
+					////Do tabeli mo¿e s³owo | wylosowane litery 
 					RuchKomputera(hwnd);
 				}
 				else
@@ -486,17 +498,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		if ((HWND)lParam == buttonOK)
 		{
-			if (IsDlgButtonChecked(hwnd, ID_RADIO_PUNKTY) == BST_CHECKED) 
-			{
-				MessageBox(NULL, "Zaznaczono na liczbe punktow", "Dziala !", MB_OK);
+			DWORD dlugosc = GetWindowTextLength(textBoxLiczbaTurPunktow);
+			LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
+			GetWindowText(textBoxLiczbaTurPunktow, Bufor, dlugosc + 1);
 
-				ShowWindow(hwnd, SW_HIDE);
-			}
-			else if (IsDlgButtonChecked(hwnd, ID_RADIO_TURY) == BST_CHECKED)
+			string liczbaTurLubPunktow(Bufor);
+			int lbTurLubPkt = atoi(liczbaTurLubPunktow.c_str());
+			if (lbTurLubPkt > 0)
 			{
-				MessageBox(NULL, "Zaznaczono na liczbe tur", "Dziala !", MB_OK);
-
-				ShowWindow(hwnd, SW_HIDE);
+				if (IsDlgButtonChecked(hwnd, ID_RADIO_PUNKTY) == BST_CHECKED)
+				{
+					MessageBox(NULL, "Zaznaczono na liczbe punktow", "Dziala !", MB_OK);
+					graDoLiczbyPunktow = lbTurLubPkt;
+					ShowWindow(hwnd, SW_HIDE);
+				}
+				else if (IsDlgButtonChecked(hwnd, ID_RADIO_TURY) == BST_CHECKED)
+				{
+					MessageBox(NULL, "Zaznaczono na liczbe tur", "Dziala !", MB_OK);
+					graDoTury = lbTurLubPkt;
+					ShowWindow(hwnd, SW_HIDE);
+				}
 			}
 		}
 		break;
