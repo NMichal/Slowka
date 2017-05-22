@@ -4,9 +4,15 @@ using namespace std;
 #ifndef SLOWNIK_H
 #define SLOWNIK_H
 
-void ZaczytajSlownik();
-bool SprawdzSlowo(string slowo);
-bool SprawdzSlowo2(string slowo);
+class Slownik
+{
+public:	
+	void ZaczytajSlownik();
+	bool SprawdzSlowo(string slowo);
+	bool SprawdzSlowo2(string slowo);
+	static string listaSlow[];//[214251]; 
 
 
+
+};
 #endif // !SLOWNIK_H

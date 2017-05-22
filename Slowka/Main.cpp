@@ -14,6 +14,8 @@ using namespace std;
 #define ID_ETYKIETA_LICZBA_LITEREK 10
 #define ID_ETYKIETA_PUNKTY_GRACZA 11
 #define ID_ETYKIETA_PUNKTY_KOMPUTERA 12
+#define ID_RADIO_TURY 13
+#define ID_RADIO_PUNKTY 14
 
 //Pozmieniaæ teksty okien 
 
@@ -40,7 +42,7 @@ int *ptura = &tura;
 
 
 
-
+Slownik slownik;
 LPSTR NazwaKlasy = "Klasa Okienka";
 MSG Komunikat;
 
@@ -62,6 +64,14 @@ HWND staticTextPunktyGracza;
 HWND staticTextEtykietaPunktyKomputera;
 HWND staticTextPunktyKomputera;
 RECT rcl; // list view bo nale¿y co grupy Common Controls
+
+//elementy DW
+HWND buttonOK;
+HWND textBoxLiczbaTurPunktow;
+HWND staticTextTuryPunkty;
+HWND radioTury;
+HWND radioPunkty;
+
 
 #pragma endregion Deklaracja kontrolek okna
 
@@ -89,7 +99,7 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 	string punkty_str = to_string(punkty);
 	LPSTR punkty_lpstr = const_cast<char *>(punkty_str.c_str());
 	ListView_SetItemText(listViewRozgrywka, tura - 1, 3, punkty_lpstr);
-	
+
 	(*ptura)++;
 }
 
@@ -131,13 +141,13 @@ void WymienLiteryGraczaMain()
 		strLiteryGracza += " ";
 	}
 
-	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter zrobiæ osobne metody 
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 }
 
 void PominRuch(HWND hwnd)
 {
-	RozgrywkaInsert(*ptura, "gracz", "--------", 0);
+	RozgrywkaInsert(*ptura, "gracz", "", 0);
 	RuchKomputera(hwnd);
 }
 
@@ -180,7 +190,72 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 	}
 
+
+	//DIALOG WINDOW
+	// WYPE£NIANIE STRUKTURY
+	WNDCLASSEX dw; //dialog window
+	LPSTR NazwaWd = "Wd";
+
+	dw.cbSize = sizeof(WNDCLASSEX);
+	dw.style = 0;
+	dw.lpfnWndProc = WndProc;
+	dw.cbClsExtra = 0;
+	dw.cbWndExtra = 0;
+	dw.hInstance = hInstance;
+	dw.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	dw.hCursor = LoadCursor(NULL, IDC_ARROW);
+	dw.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	dw.lpszMenuName = NULL;
+	dw.lpszClassName = NazwaWd;
+	dw.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
+	// REJESTROWANIE KLASY OKNA
+	if (!RegisterClassEx(&dw))
+	{
+		MessageBox(NULL, "Nie mozna zarejestrowac tego okna!", "Error",
+			MB_ICONEXCLAMATION | MB_OK);
+		return 1;
+	}
+
+	// TWORZENIE OKNA
+	HWND DialogWindow;
+
+	DialogWindow = CreateWindowEx(WS_EX_CLIENTEDGE, NazwaWd, "Oto okienko", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, NULL, NULL, hInstance, NULL);
+
+	if (DialogWindow == NULL)
+	{
+		MessageBox(NULL, "Nie udalo sie stworzyc okna aplikacji!", "Error", MB_ICONEXCLAMATION);
+		return 1;
+	}
+
 #pragma region
+	////----------------Elementy DW-----------------------/////////
+	buttonOK = CreateWindowEx(0, "BUTTON", "ZatwierdŸ", WS_CHILD | WS_VISIBLE,
+		10, 100, 150, 30, DialogWindow, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+
+	textBoxLiczbaTurPunktow = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
+		10, 60, 250, 30, DialogWindow, NULL, hInstance, NULL);
+
+	staticTextTuryPunkty = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
+		SS_LEFT, 10, 20, 150, 30, DialogWindow, NULL, hInstance, NULL);
+	SetWindowText(staticTextTuryPunkty, "Gra do: liczba tur / liczba punktów:");
+
+	radioTury = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Liczba tur",
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+		10, 140, 150, 30,
+		DialogWindow, (HMENU)ID_RADIO_TURY,
+		GetModuleHandle(NULL), 0);
+	//SendMessage(radioTury, WM_SETFONT, (WPARAM)font, TRUE);
+
+	radioPunkty = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Liczba punktów",
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+		200, 140, 150, 30,
+		DialogWindow, (HMENU)ID_RADIO_PUNKTY,
+		GetModuleHandle(NULL), 0);
+	//SendMessage(radioPunkty, WM_SETFONT, (WPARAM)font, TRUE);
+
+	////----------------End Elementy DW-----------------------/////////
 	buttonWymienLiterki = CreateWindowEx(0, "BUTTON", "Wymieñ literki", WS_CHILD | WS_VISIBLE,
 		550, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
 
@@ -273,31 +348,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ListView_InsertColumn(listViewRozgrywka, 3, &lvc);
 #pragma endregion Kolumny w listView
 
-	/*RozgrywkaInsert(*ptura, "Michal", "Siema", 10);
-	RozgrywkaInsert(*ptura, "Komputer", "Tramwaj", 5);
-	RozgrywkaInsert(*ptura, "Michal", "Kosz", 15);
-	RozgrywkaInsert(*ptura, "Komputer", "Kot", 3);
-	RozgrywkaInsert(*ptura, "Michal", "Jogurtowy", 22);
-	RozgrywkaInsert(*ptura, "Komputer", "Tabletka", 19);
-	RozgrywkaInsert(*ptura, "Michal", "£y¿ka", 16);
-	RozgrywkaInsert(*ptura, "Komputer", "Laptop", 8);*/
-
 #pragma endregion Inicjalizacja kontrolek okna
 
 
 	//----------------------------------Tutaj rozpoczynamy gre-------------------------------------------------------------------
 
-	ZaczytajSlownik();
+	//Slownik s2;
+	slownik.ZaczytajSlownik();
 	//bool elo = SprawdzSlowo("koñ");
 	//bool elo = SprawdzSlowo2("auto");
 
-	//while (1) 
-	//{
-
-		//liczbaLiter = LiczbaPozostalychLiter();
-		//SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, liczbaLiter, true);
-
-	//}
 	srand(time(NULL));
 	while (literyKomputera.size() < 9)
 		literyKomputera.push_back(LosujLitere());
@@ -322,6 +382,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//------------------------------------------------------------------------------------------------------------------------------
 	ShowWindow(OknoAplikacji, nCmdShow); // Poka¿ okienko...
 	UpdateWindow(OknoAplikacji);
+
+	ShowWindow(DialogWindow, nCmdShow); // Poka¿ okienko DW
+	UpdateWindow(DialogWindow);
+
+
+
+	//ShowWindow(DialogWindow, SW_HIDE);
 
 
 
@@ -363,7 +430,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
 			SetWindowText(staticTextTwojeLitery, lpcstr);
 		}
-		if ((HWND)lParam == buttonZatwierdz) 
+		if ((HWND)lParam == buttonZatwierdz)
 		{
 			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
 
@@ -382,7 +449,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
 			{
 				//bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
-				bool istniejeSlowo = SprawdzSlowo(wpisaneSlowo);
+				//Slownik s1;
+				bool istniejeSlowo = slownik.SprawdzSlowo(wpisaneSlowo);
 				if (istniejeSlowo)
 				{
 					MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
@@ -396,7 +464,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					//-------------------->>>>>>>>>>>>>>>>>>>>>>----------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------
 
 
-					
+
 					////Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
 					RuchKomputera(hwnd);
 				}
@@ -411,10 +479,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
 			}
 		}
-		if ((HWND)lParam == buttonPomin) 
+		if ((HWND)lParam == buttonPomin)
 		{
 			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
 			PominRuch(hwnd);
+		}
+		if ((HWND)lParam == buttonOK)
+		{
+			if (IsDlgButtonChecked(hwnd, ID_RADIO_PUNKTY) == BST_CHECKED) 
+			{
+				MessageBox(NULL, "Zaznaczono na liczbe punktow", "Dziala !", MB_OK);
+
+				ShowWindow(hwnd, SW_HIDE);
+			}
+			else if (IsDlgButtonChecked(hwnd, ID_RADIO_TURY) == BST_CHECKED)
+			{
+				MessageBox(NULL, "Zaznaczono na liczbe tur", "Dziala !", MB_OK);
+
+				ShowWindow(hwnd, SW_HIDE);
+			}
 		}
 		break;
 

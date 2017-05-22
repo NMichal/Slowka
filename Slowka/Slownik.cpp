@@ -8,8 +8,8 @@ using namespace std;
 
 
 
-string listaSlow[214251];
-void ZaczytajSlownik()
+string Slownik::listaSlow[214251];
+void Slownik::ZaczytajSlownik()
 {
 	ifstream file("slowa.txt");
 	if (file.is_open())
@@ -20,16 +20,16 @@ void ZaczytajSlownik()
 						if (i == 214250)
 							int a = 2;
 						//-->>End debug test>>--
-			file >> listaSlow[i];
+			file >> Slownik::listaSlow[i];
 		}
 	}
 }
 
 
 //Funkcja sprawdza czy podane slowo istnieje w slowniku
-bool SprawdzSlowo(string slowo)
+bool Slownik::SprawdzSlowo(string slowo)
 {
-	for each (string wyraz in listaSlow)
+	for each (string wyraz in Slownik::listaSlow)
 	{
 		if (slowo == wyraz)  //nie dzia³a ostatnie s³owo "zyzania" nie wiadomo czemu .
 			return true;
