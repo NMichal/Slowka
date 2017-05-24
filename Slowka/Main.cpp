@@ -16,6 +16,9 @@ using namespace std;
 #define ID_ETYKIETA_PUNKTY_KOMPUTERA 12
 #define ID_RADIO_TURY 13
 #define ID_RADIO_PUNKTY 14
+#define ID_RADIO_PVSC 15
+#define ID_RADIO_PVSP 16
+#define ID_RADIO_CVSC 17
 
 //Pozmieniaæ teksty okien 
 
@@ -73,7 +76,9 @@ HWND textBoxLiczbaTurPunktow;
 HWND staticTextTuryPunkty;
 HWND radioTury;
 HWND radioPunkty;
-
+HWND radioPVsP;
+HWND radioPVsC;
+HWND radioCVsC;
 
 #pragma endregion Deklaracja kontrolek okna
 
@@ -238,7 +243,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma region
 	////----------------Elementy DW-----------------------/////////
 	buttonOK = CreateWindowEx(0, "BUTTON", "ZatwierdŸ", WS_CHILD | WS_VISIBLE,
-		10, 100, 150, 30, DialogWindow, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+		10, 250, 340, 70, DialogWindow, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
 
 	textBoxLiczbaTurPunktow = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		10, 60, 250, 30, DialogWindow, NULL, hInstance, NULL);
@@ -248,18 +253,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWindowText(staticTextTuryPunkty, "Gra do: liczba tur / liczba punktów:");
 
 	radioTury = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Liczba tur",
-		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-		10, 140, 150, 30,
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
+		10, 100, 150, 30,
 		DialogWindow, (HMENU)ID_RADIO_TURY,
 		GetModuleHandle(NULL), 0);
 	//SendMessage(radioTury, WM_SETFONT, (WPARAM)font, TRUE);
 
 	radioPunkty = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Liczba punktów",
 		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-		200, 140, 150, 30,
+		200, 100, 150, 30,
 		DialogWindow, (HMENU)ID_RADIO_PUNKTY,
 		GetModuleHandle(NULL), 0);
-	//SendMessage(radioPunkty, WM_SETFONT, (WPARAM)font, TRUE);
+
+	radioPVsC = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Gracz vs Komputer",
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
+		10, 160, 150, 30,
+		DialogWindow, (HMENU)ID_RADIO_PVSC,
+		GetModuleHandle(NULL), 0);
+
+	radioPVsP = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Gracz vs Gracz",
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+		200, 160, 150, 30,
+		DialogWindow, (HMENU)ID_RADIO_PVSP,
+		GetModuleHandle(NULL), 0);
+
+	radioCVsC = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Komputer vs Komputer",
+		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+		100, 200, 180, 30,
+		DialogWindow, (HMENU)ID_RADIO_CVSC,
+		GetModuleHandle(NULL), 0);
+
 
 	////----------------End Elementy DW-----------------------/////////
 	buttonWymienLiterki = CreateWindowEx(0, "BUTTON", "Wymieñ literki", WS_CHILD | WS_VISIBLE,
@@ -461,7 +484,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
 					int punkty = PunktujSlowo(wpisaneSlowo);
-					RozgrywkaInsert(*ptura, "gracz", wpisaneSlowo, punkty);
+					wpisaneSlowo = " (" + strLiteryGracza + ")";
+					RozgrywkaInsert(*ptura, "Gracz", wpisaneSlowo, punkty);
 					punktyGracza += punkty;
 					SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
 					if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow) 
