@@ -44,6 +44,7 @@ int tura = 1;
 int *ptura = &tura;
 int graDoTury = -1;
 int graDoLiczbyPunktow = -1;
+int trybGry = -1; //1 - PVsC, 2 - PVsP, 3 - CVsC
 
 
 
@@ -530,18 +531,43 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			int lbTurLubPkt = atoi(liczbaTurLubPunktow.c_str());
 			if (lbTurLubPkt > 0)
 			{
+				bool wybranoTuryLubPunkty = false;
+				bool wybranoTrybGry = false;
+
 				if (IsDlgButtonChecked(hwnd, ID_RADIO_PUNKTY) == BST_CHECKED)
 				{
 					MessageBox(NULL, "Zaznaczono na liczbe punktow", "Dziala !", MB_OK);
+					graDoTury = -1;
 					graDoLiczbyPunktow = lbTurLubPkt;
-					ShowWindow(hwnd, SW_HIDE);
+					wybranoTuryLubPunkty = true;
+					//ShowWindow(hwnd, SW_HIDE);
 				}
 				else if (IsDlgButtonChecked(hwnd, ID_RADIO_TURY) == BST_CHECKED)
 				{
 					MessageBox(NULL, "Zaznaczono na liczbe tur", "Dziala !", MB_OK);
+					graDoLiczbyPunktow = -1;
 					graDoTury = lbTurLubPkt;
-					ShowWindow(hwnd, SW_HIDE);
+					wybranoTuryLubPunkty = true;
+					//ShowWindow(hwnd, SW_HIDE);
 				}
+				if (IsDlgButtonChecked(hwnd, ID_RADIO_PVSC) == BST_CHECKED) 
+				{
+					trybGry = 1;
+					wybranoTrybGry = true;
+				}
+				else if (IsDlgButtonChecked(hwnd, ID_RADIO_PVSP) == BST_CHECKED)
+				{
+					trybGry = 2;
+					wybranoTrybGry = true;
+				}
+				else if (IsDlgButtonChecked(hwnd, ID_RADIO_CVSC) == BST_CHECKED)
+				{
+					trybGry = 3;
+					wybranoTrybGry = true;
+				}
+
+				if (wybranoTrybGry && wybranoTuryLubPunkty)
+					ShowWindow(hwnd, SW_HIDE);
 			}
 		}
 		break;
