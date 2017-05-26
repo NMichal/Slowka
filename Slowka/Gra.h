@@ -1,4 +1,6 @@
-#include <string>
+#include <string> 
+#include <list>
+
 using namespace std;
 
 #ifndef GRA_H
@@ -13,6 +15,7 @@ bool CzyMoznaUtworzycSlowo(string slowo, string litery);
 string KomputerUkladaSlowo(string wylosowaneLitery);
 void WymienLitery();
 int PunktujSlowo(string slowo);
+string LiteryDoWyswietlenia(list<char> litery);
 
 
 

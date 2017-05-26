@@ -11,6 +11,7 @@ public:
 	bool SprawdzSlowo(string slowo);
 	bool SprawdzSlowo2(string slowo);
 	static string listaSlow[];//[214251]; 
+	string KomputerUkladaSlowo(string wylosowaneLitery);
 
 
 
