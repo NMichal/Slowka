@@ -8,7 +8,6 @@
 #include "Slownik.h"
 #include "Gra.h"
 
-//Zrobiæ na dowoln¹ liczbe graczy
 using namespace std;
 
 #define ID_ETYKIETA_LICZBA_LITEREK 10
@@ -20,19 +19,9 @@ using namespace std;
 #define ID_RADIO_PVSP 16
 #define ID_RADIO_CVSC 17
 
+
 //Pozmieniaæ teksty okien 
-
-///mo¿emy sparsowaæ liniê œcie¿ki ¿eby dodaæ coœ ciekawego np. jakieœ cheaty - u³atwienia
-
-//Czytanie ze s³owanika
-//Sprawdzanie czy podane s³owo istnieje w s³owniku 
-//Zliczanie punktów
-//?? mo¿e na pocz¹tku pytanie ile tur - max - do skoñczenia literek
-//pass - gdy nie mamy nic (chocia¿ mo¿e lepiej tylko wymieñ literki)
 // Jakieœ komunikaty
-// Licznik ile pozosta³o literek w "worku"
-// lowercase - przy pobieraniu z textboxa (sprawdziæ czy wszystko w s³owniku bêdzie ma³e)
-
 //wylaczyc maksymalizacje
 // byæ mo¿e póŸniej dodaæ ID_PRZYCISKOW 
 
@@ -60,8 +49,6 @@ HWND buttonWymienLiterki;
 HWND buttonZatwierdz;
 HWND buttonPomin;
 HWND textBoxWpisaneSlowo;
-//HWND staticTextEtykietaLiczbaLiterek;
-//HWND staticTextLiczbaLiterek;
 HWND staticTextEtykietaTwojeLitery;
 HWND staticTextTwojeLitery;
 HWND listViewRozgrywka;
@@ -119,15 +106,9 @@ void WymienLiteryGraczaMain()
 	while (literyGracza.size() < 9)
 		literyGracza.push_back(LosujLitere());
 
-	//string strLiteryGracza = "";
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
-	//for (auto v : literyGracza)
-	//{
-	//	strLiteryGracza += v;
-	//	strLiteryGracza += " ";
-	//}
 
-	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter zrobiæ osobne metody 
+	LPCSTR lpcstr = strLiteryGracza.c_str();
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 }
 
@@ -138,16 +119,13 @@ void RuchKomputera(HWND hwnd)
 	while (literyKomputera.size() < 9)	//Wymiana liter przed ruchem PC
 		literyKomputera.push_back(LosujLitere());
 
-	//string literyKomputeraDoWyswietlenia = "";
 	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyKomputera);
 	string strLiteryKomputera = "";
 	for (auto v : literyKomputera)
 	{
 		strLiteryKomputera += v;
-		//literyKomputeraDoWyswietlenia += v;
-		//literyKomputeraDoWyswietlenia += " ";
  	}
-	//Do tabeli mo¿e s³owo | wylosowane litery ? bo jak na weilu graczy ?
+
 	MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
 	string ulozoneSlowo = slownik.KomputerUkladaSlowo(strLiteryKomputera);
 	int punkty = PunktujSlowo(ulozoneSlowo);
@@ -184,8 +162,6 @@ bool RuchGracza(HWND hwnd)
 
 	if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
 	{
-		//bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
-		//Slownik s1;
 		bool istniejeSlowo = slownik.SprawdzSlowo(wpisaneSlowo);
 		if (istniejeSlowo)
 		{
@@ -198,7 +174,6 @@ bool RuchGracza(HWND hwnd)
 			if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow)
 			{
 				MessageBox(hwnd, "Wygral Gracz ", "Ha!", MB_ICONINFORMATION);
-				//DestroyWindow(hwnd);
 				ExitProcess(1);
 			}
 			if (graDoTury != -1 && *ptura > graDoTury)
@@ -207,13 +182,7 @@ bool RuchGracza(HWND hwnd)
 				ExitProcess(1);
 			}
 			///Wyczyœciæ pole wpisaneSlowo
-			//----->>>>>>>> Przekopiowane z przycisku WymienLiterki - trzeba zrobiæ osobn¹ funkjce wymien liteki <<<<<<<<<<<<<<<-----------------------------------
 			WymienLiteryGraczaMain();
-			//-------------------->>>>>>>>>>>>>>>>>>>>>>----------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------
-
-
-
-			////Do tabeli mo¿e s³owo | wylosowane litery 
 			return true;
 		}
 		else
@@ -221,8 +190,7 @@ bool RuchGracza(HWND hwnd)
 			MessageBox(hwnd, "Nie ma takiego slowa", "Ha!", MB_ICONINFORMATION);
 			return false;
 		}
-	}///prawie gotowe, trzeba tylko podaæ litery które mamy i sprawdziæ ;) 
-	 // Mo¿na tak¿e u¿yæ tego do generowania przez PC tylko zamiast wpisaneSlowo daæ slowo ze slownika
+	}
 	else
 	{
 		MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
@@ -234,13 +202,7 @@ bool RuchGracza(HWND hwnd)
 
 void PominRuch(HWND hwnd)
 {
-	//string strLiteryGracza = "";
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
-	//for (auto v : literyGracza)
-	//{
-	//	strLiteryGracza += v;
-	//	strLiteryGracza += " ";
-	//}
 	RozgrywkaInsert(*ptura, "gracz", ("( " + strLiteryGracza + ")"), 0);
 	WymienLiteryGraczaMain();
 	RuchKomputera(hwnd);
@@ -327,7 +289,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #pragma region
 	////----------------Elementy DW-----------------------/////////
 	buttonOK = CreateWindowEx(0, "BUTTON", "ZatwierdŸ", WS_CHILD | WS_VISIBLE,
-		10, 250, 340, 70, DialogWindow, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+		10, 250, 340, 70, DialogWindow, NULL, hInstance, NULL);
 
 	textBoxLiczbaTurPunktow = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		10, 60, 250, 30, DialogWindow, NULL, hInstance, NULL);
@@ -341,7 +303,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		10, 100, 150, 30,
 		DialogWindow, (HMENU)ID_RADIO_TURY,
 		GetModuleHandle(NULL), 0);
-	//SendMessage(radioTury, WM_SETFONT, (WPARAM)font, TRUE);
 
 	radioPunkty = CreateWindowExW(WS_EX_TRANSPARENT, L"BUTTON", L"Liczba punktów",
 		WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
@@ -381,17 +342,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	textBoxWpisaneSlowo = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		50, 600, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
 
-	//staticTextEtykietaLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-	//	SS_LEFT, 600, 50, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
-	//SetWindowText(staticTextEtykietaLiczbaLiterek, "Liczba pozosta³ych \n\tliterek:");
-
-	//staticTextLiczbaLiterek = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
-	//	SS_CENTER, 600, 80, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_LICZBA_LITEREK, hInstance, NULL);
-	////--------------------------------------------------------------------------------------------------------------------------------
-	//int i = 10;
-	//SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_LICZBA_LITEREK, i, true);	//---!!!---Ustwaienie etyliety liczby literek z inta ---!!!---
-	////--------------------------------------------------------------------------------------------------------------------------------
-
 	staticTextEtykietaTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 50, 520, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
 	SetWindowText(staticTextEtykietaTwojeLitery, "Twoje literki:");
@@ -399,26 +349,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	staticTextTwojeLitery = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 50, 550, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
 
-	//--------------------------------------------------------------------------------------------------------------------------------
-	//string test = "A B C D E F";
-	//LPCSTR lpcstr = test.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
-	//SetWindowText(staticTextTwojeLitery, lpcstr);
-
-	//--------------------------------------------------------------------------------------------------------------------------------
-
-
 	staticTextEtykietaPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 750, 170, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
 	SetWindowText(staticTextEtykietaPunktyGracza, "Punkty Gracza:");
 
 	staticTextPunktyGracza = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_CENTER, 750, 200, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_GRACZA, hInstance, NULL);
-	//--------------------------------------------------------------------------------------------------------------------------------
-	//int pktGracz = 120;
-	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);	//---!!!---Ustwaienie etyliety punkty gracza z inta ---!!!---
-	//--------------------------------------------------------------------------------------------------------------------------------
 
-
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true); //Ustawieni pkt gracza na etykiecie
 
 	staticTextEtykietaPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_LEFT, 750, 250, 150, 30, OknoAplikacji, NULL, hInstance, NULL);
@@ -426,11 +364,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	staticTextPunktyKomputera = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE |
 		SS_CENTER, 750, 280, 150, 30, OknoAplikacji, (HMENU)ID_ETYKIETA_PUNKTY_KOMPUTERA, hInstance, NULL);
-	//--------------------------------------------------------------------------------------------------------------------------------
-	//int pktKomputer = 20;
-	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);	//---!!!---Ustwaienie etyliety punkty komputera z inta ---!!!---
-	//--------------------------------------------------------------------------------------------------------------------------------
 
+	SetDlgItemInt(OknoAplikacji, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);	//Ustawieni pkt komputera na etykiecie
 
 	listViewRozgrywka = CreateWindowEx(0, WC_LISTVIEW, NULL, WS_CHILD | WS_VISIBLE | LVS_REPORT |
 		LVS_EDITLABELS, 50, 50, 600, 450,
@@ -463,13 +398,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 #pragma endregion Inicjalizacja kontrolek okna
 
-
-	//----------------------------------Tutaj rozpoczynamy gre-------------------------------------------------------------------
-
-	//Slownik s2;
 	slownik.ZaczytajSlownik();
-	//bool elo = SprawdzSlowo("koñ");
-	//bool elo = SprawdzSlowo2("auto");
 
 	srand(time(NULL));
 	while (literyKomputera.size() < 9)
@@ -480,17 +409,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
 
-	//string strLiteryGracza = "";
-
-	//for (auto v : literyGracza)
-	//{
-	//	strLiteryGracza += v;
-	//	strLiteryGracza += " ";
-	//}
-
-
-
-	LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
+	LPCSTR lpcstr = strLiteryGracza.c_str();
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 
 
@@ -500,12 +419,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	ShowWindow(DialogWindow, nCmdShow); // Poka¿ okienko DW
 	UpdateWindow(DialogWindow);
-
-
-
-	//ShowWindow(DialogWindow, SW_HIDE);
-
-
 
 	// Pêtla komunikatów - klikniêcie myszk¹, wciœniêcie klawisza czy zamkniêcie okna
 	while (GetMessage(&Komunikat, NULL, 0, 0)) // Gdy robimy jak¹œ czynnoœæ, która wi¹¿e siê z powstaniem jakiejœ wiadomoœci, np. poruszamy mysz¹, wiadomoœæ posy³ana jest do kolejki wiadomoœci, sk¹d zabiera j¹ GetMessage. 
@@ -529,25 +442,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	case WM_COMMAND://obs³uga naszego przycisku buttonWymienLiterki
+
 		if ((HWND)lParam == buttonWymienLiterki) 
 		{
 			WymienLiteryGraczaMain();
-			//literyGracza.clear();
-
-			//while (literyGracza.size() < 9)
-			//	literyGracza.push_back(LosujLitere());
-
-			////string strLiteryGracza = "";
-			////for (auto v : literyGracza)
-			////{
-			////	strLiteryGracza += v;
-			////	strLiteryGracza += " ";
-			////}
-			//string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
-
-			//LPCSTR lpcstr = strLiteryGracza.c_str();			//Wyœwietlanie liter - mo¿e do wyœwietlania liter i liczby liter zrobiæ osobne metody 
-			//SetWindowText(staticTextTwojeLitery, lpcstr);
 		}
+
 		if ((HWND)lParam == buttonZatwierdz)
 		{
 			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
@@ -555,69 +455,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				RuchKomputera(hwnd);
 			}
-			
-			//DWORD dlugosc = GetWindowTextLength(textBoxWpisaneSlowo);
-			//LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
-			//GetWindowText(textBoxWpisaneSlowo, Bufor, dlugosc + 1);
-
-			//string wpisaneSlowo(Bufor);
-
-			//string strLiteryGracza = "";
-			//for (auto v : literyGracza)
-			//{
-			//	strLiteryGracza += v;
-			//}
-
-			//if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
-			//{
-			//	//bool istniejeSlowo = SprawdzSlowo2(wpisaneSlowo);
-			//	//Slownik s1;
-			//	bool istniejeSlowo = slownik.SprawdzSlowo(wpisaneSlowo);
-			//	if (istniejeSlowo)
-			//	{
-			//		MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
-			//		int punkty = PunktujSlowo(wpisaneSlowo);
-			//		wpisaneSlowo += " (" + strLiteryGracza + ")";
-			//		RozgrywkaInsert(*ptura, "Gracz", wpisaneSlowo, punkty);
-			//		punktyGracza += punkty;
-			//		SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
-			//		if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow) 
-			//		{
-			//			MessageBox(hwnd, "Wygral Gracz ", "Ha!", MB_ICONINFORMATION);
-			//			//DestroyWindow(hwnd);
-			//			ExitProcess(1);
-			//		}	
-			//		if (graDoTury != -1 && *ptura > graDoTury)
-			//		{
-			//			MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
-			//			ExitProcess(1);
-			//		}
-			//		///Wyczyœciæ pole wpisaneSlowo
-			//		//----->>>>>>>> Przekopiowane z przycisku WymienLiterki - trzeba zrobiæ osobn¹ funkjce wymien liteki <<<<<<<<<<<<<<<-----------------------------------
-			//		WymienLiteryGraczaMain();
-			//		//-------------------->>>>>>>>>>>>>>>>>>>>>>----------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<-------------------------------------
-
-
-
-			//		////Do tabeli mo¿e s³owo | wylosowane litery 
-			//		RuchKomputera(hwnd);
-			//	}
-			//	else
-			//	{
-			//		MessageBox(hwnd, "Nie ma takiego slowa", "Ha!", MB_ICONINFORMATION);
-			//	}
-			//}///prawie gotowe, trzeba tylko podaæ litery które mamy i sprawdziæ ;) 
-			//// Mo¿na tak¿e u¿yæ tego do generowania przez PC tylko zamiast wpisaneSlowo daæ slowo ze slownika
-			//else
-			//{
-			//	MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
-			//}
+	
 		}
 		if ((HWND)lParam == buttonPomin)
 		{
 			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
 			PominRuch(hwnd);
 		}
+
 		if ((HWND)lParam == buttonOK)
 		{
 			DWORD dlugosc = GetWindowTextLength(textBoxLiczbaTurPunktow);

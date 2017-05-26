@@ -17,10 +17,6 @@ void Slownik::ZaczytajSlownik()
 	{
 		for (int i = 0; i < 214252; ++i)
 		{
-						//-->>Debug test>>--
-						if (i == 214250)
-							int a = 2;
-						//-->>End debug test>>--
 			file >> Slownik::listaSlow[i];
 		}
 	}
@@ -32,7 +28,7 @@ bool Slownik::SprawdzSlowo(string slowo)
 {
 	for each (string wyraz in Slownik::listaSlow)
 	{
-		if (slowo == wyraz)  //nie dzia³a ostatnie s³owo "zyzania" nie wiadomo czemu .
+		if (slowo == wyraz)
 			return true;
 	}
 	return false;
@@ -62,26 +58,21 @@ bool Slownik::SprawdzSlowo(string slowo)
 
 string  Slownik::KomputerUkladaSlowo(string wylosowaneLitery)
 {
-	//ifstream file("slowa.txt");
 	int punkty = 0;
 	string slowo = "";
-	//if (file.is_open()) {
-		for (int i = 0; i < 214251; ++i)
+	for (int i = 0; i < 214251; ++i)
+	{
+		string temp;
+		temp = Slownik::listaSlow[i];
+		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
 		{
-			string temp;
-			//file >> temp;
-			temp = Slownik::listaSlow[i];
-			if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
+			int pkt = PunktujSlowo(temp);
+			if (pkt > punkty)
 			{
-				int pkt = PunktujSlowo(temp);
-				if(pkt > punkty)
-				{
-					punkty = pkt;
-					slowo = temp;
-				}
+				punkty = pkt;
+				slowo = temp;
 			}
-
 		}
-		return slowo;
 	}
-//}
+	return slowo;
+}

@@ -49,40 +49,12 @@ bool CzyMoznaUtworzycSlowo(string slowo, string litery)
 {
 	for (int i = 0; i < slowo.size(); i++)
 	{
-		//int test = ZliczLitery(slowo, slowo[i]);
-		//int test2 = ZliczLitery(litery, slowo[i]);
 		if (ZliczLitery(slowo, slowo[i]) > ZliczLitery(litery, slowo[i]))
 			return false;
 	}
 	return true;
 }
 
-string thredTest(string wylosowaneLitery, int start, int end)
-{
-	
-	//ifstream file("slowa.txt");
-	int punkty = 0;
-	string slowo = "";
-	//if (file.is_open()) {
-		for (int i = start; i < end; ++i)
-		{
-			string temp;
-			//file >> temp;
-			temp = Slownik::listaSlow[i];
-			if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
-			{
-				int pkt = PunktujSlowo(temp);
-				if (pkt > punkty)
-				{
-					punkty = pkt;
-					slowo = temp;
-				}
-			}
-
-		}
-		return slowo;
-	//}
-}
 
 //string KomputerUkladaSlowo(string wylosowaneLitery)
 //{
@@ -142,18 +114,6 @@ string thredTest(string wylosowaneLitery, int start, int end)
 //	//	}
 //	//	return slowo;
 //	//}
-//
-//		//thread test
-//		//auto f = std::async(thredTest, wylosowaneLitery, 0, 1000000);  // f is a std::future<int>
-//		//auto g = std::async(thredTest, wylosowaneLitery, 1000000, 2000000);  // f is a std::future<int>
-//		//auto h = std::async(thredTest, wylosowaneLitery, 2000000, 2791036);  // f is a std::future<int>
-//		//
-//		//string s1 = f.get();
-//		//string s2 = g.get();
-//		//string s3 = h.get();
-//
-//	//string slowo = thredTest(wylosowaneLitery, 0, 2791036);
-//	//return slowo;
 //}
 
 
@@ -162,8 +122,6 @@ int PunktujSlowo(string slowo)
 	int punkty = 0;
 	for (int i = 0; i < slowo.size(); i++)
 	{
-		//int count = ZliczLitery(slowo, slowo[i]);
-
 		if (slowo[i] == 'a' || slowo[i] == 'e' || slowo[i] == 'i' || slowo[i] == 'n' || slowo[i] == 'o' || slowo[i] == 'r' || slowo[i] == 's' || slowo[i] == 'w' || slowo[i] == 'z')
 			punkty += 1;
 
