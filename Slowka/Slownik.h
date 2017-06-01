@@ -11,5 +11,6 @@ public:
 	bool SprawdzSlowo(string slowo);
 	static string listaSlow[];
 	string KomputerUkladaSlowo(string wylosowaneLitery);
+	string KomputerUkladaSlowoBruteForce(string wylosowaneLitery);
 };
 #endif // !SLOWNIK_H

@@ -167,7 +167,8 @@ bool RuchGracza(HWND hwnd)
 		{
 			MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
 			int punkty = PunktujSlowo(wpisaneSlowo);
-			wpisaneSlowo += " ( " + strLiteryGracza + ")";
+			string literyDoWysietlenia = LiteryDoWyswietlenia(literyGracza);
+			wpisaneSlowo += " ( " + literyDoWysietlenia + ")";
 			RozgrywkaInsert(*ptura, "Gracz", wpisaneSlowo, punkty);
 			punktyGracza += punkty;
 			SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
@@ -180,7 +181,8 @@ bool RuchGracza(HWND hwnd)
 			{
 				MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
 				ExitProcess(1);
-			}
+			} 
+			SetWindowText(textBoxWpisaneSlowo, (""));
 			///Wyczyœciæ pole wpisaneSlowo
 			WymienLiteryGraczaMain();
 			return true;
@@ -451,15 +453,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if ((HWND)lParam == buttonZatwierdz)
 		{
 			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
-			if (RuchGracza(hwnd))
+			//1 = pvc, 2 - pvp
+			switch (trybGry)
 			{
-				RuchKomputera(hwnd);
+			case 1:
+				if (RuchGracza(hwnd))
+				{
+					RuchKomputera(hwnd);
+				}
+				break;
+
+
 			}
-	
 		}
 		if ((HWND)lParam == buttonPomin)
 		{
 			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
+			SetWindowText(textBoxWpisaneSlowo, (""));
 			PominRuch(hwnd);
 		}
 
@@ -499,6 +509,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					trybGry = 1;
 					wybranoTrybGry = true;
+					MessageBox(hwnd, "Rozpoczyna gracz.", "Ha!", MB_ICONINFORMATION);
 				}
 				else if (IsDlgButtonChecked(hwnd, ID_RADIO_PVSP) == BST_CHECKED)
 				{
