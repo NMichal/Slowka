@@ -268,10 +268,20 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 void PominRuch(HWND hwnd)
 {
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
-	RozgrywkaInsert(*ptura, "gracz", ("( " + strLiteryGracza + ")"), 0);
+	if (trybGry == 1)
+		RozgrywkaInsert(*ptura, "gracz", ("( " + strLiteryGracza + ")"), 0);
+	else 
+	{
+		int graczNr;
+		if (*ptura % 2 == 1)
+			RozgrywkaInsert(*ptura, "Gracz 1", ("( " + strLiteryGracza + ")"), 0);
+		else
+			RozgrywkaInsert(*ptura, "Gracz 2", ("( " + strLiteryGracza + ")"), 0);
+	}
 	iloscWymianLiter = 3; 
 	WymienLiteryGracza();
-	RuchKomputera(hwnd);
+	if(trybGry == 1)
+		RuchKomputera(hwnd);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -550,8 +560,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
 
 				SetWindowText(textBoxWpisaneSlowo, (""));
-				if (trybGry == 1)
-					PominRuch(hwnd);
+				PominRuch(hwnd);
+				if (graDoTury != -1 && *ptura > graDoTury)
+				{
+					MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+					ExitProcess(1);
+				}
 		}
 
 		if ((HWND)lParam == buttonOK)
