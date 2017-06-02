@@ -23,16 +23,6 @@ char LosujLitere()
 	return litery[index];
 }
 
-void WymienLitery(list<char> litery) 
-{
-
-}
-
-void WyswietlLiczbePunktow() 
-{
-
-}
-
 //Funkcja zwraca liczbê wyst¹pieñ danej litery w tekscie
 int ZliczLitery(string tekst, char litera) 
 {

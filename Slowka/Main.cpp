@@ -34,6 +34,7 @@ int *ptura = &tura;
 int graDoTury = -1;
 int graDoLiczbyPunktow = -1;
 int trybGry = -1; //1 - PVsC, 2 - PVsP, 3 - CVsC
+int iloscWymianLiter = 3;
 
 
 
@@ -99,7 +100,7 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 }
 
 ///Zmieniæ na jedn¹ funkcjê dla gracza i PC (chocia¿ dla wielu graczy beda tylko jedne zmieniajace sie litery) oraz przeniesc do pliku Gra.cpp
-void WymienLiteryGraczaMain()
+void WymienLiteryGracza()
 {
 	literyGracza.clear();
 
@@ -126,7 +127,9 @@ void RuchKomputera(HWND hwnd)
 		strLiteryKomputera += v;
  	}
 
-	MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
+	if(trybGry != 3)
+		MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
+
 	string ulozoneSlowo = slownik.KomputerUkladaSlowo(strLiteryKomputera);
 	int punkty = PunktujSlowo(ulozoneSlowo);
 	ulozoneSlowo += " ( " + literyKomputeraDoWyswietlenia + ")";
@@ -145,7 +148,42 @@ void RuchKomputera(HWND hwnd)
 	}
 }
 
-bool RuchGracza(HWND hwnd)
+
+void RuchKomputeraBruteForce(HWND hwnd)
+{
+	literyGracza.clear();
+
+	while (literyGracza.size() < 9)	//Wymiana liter przed ruchem PC
+		literyGracza.push_back(LosujLitere());
+
+	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyGracza);
+	string strLiteryKomputera = "";
+	for (auto v : literyGracza)
+	{
+		strLiteryKomputera += v;
+	}
+
+	string ulozoneSlowo = slownik.KomputerUkladaSlowoBruteForce(strLiteryKomputera);
+	int punkty = PunktujSlowo(ulozoneSlowo);
+	ulozoneSlowo += " ( " + literyKomputeraDoWyswietlenia + ")";
+	RozgrywkaInsert(*ptura, "Komputer BF", ulozoneSlowo, punkty);
+	punktyGracza += punkty;
+	SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
+	ShowWindow(staticTextPunktyGracza, SW_HIDE);
+	ShowWindow(staticTextPunktyGracza, SW_SHOW);
+	if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow)
+	{
+		MessageBox(hwnd, "Wygral Komputer Brute Force", "Ha!", MB_ICONINFORMATION);
+		ExitProcess(1);
+	}
+	if (graDoTury != -1 && *ptura > graDoTury)
+	{
+		MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+		ExitProcess(1);
+	}
+}
+
+bool RuchGracza(HWND hwnd, int nrGracza)
 {
 
 	DWORD dlugosc = GetWindowTextLength(textBoxWpisaneSlowo);
@@ -169,27 +207,52 @@ bool RuchGracza(HWND hwnd)
 			int punkty = PunktujSlowo(wpisaneSlowo);
 			string literyDoWysietlenia = LiteryDoWyswietlenia(literyGracza);
 			wpisaneSlowo += " ( " + literyDoWysietlenia + ")";
-			RozgrywkaInsert(*ptura, "Gracz", wpisaneSlowo, punkty);
-			punktyGracza += punkty;
-			SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
-			if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow)
+			if(nrGracza == 1)	
+				RozgrywkaInsert(*ptura, "Gracz 1", wpisaneSlowo, punkty);
+			else if(nrGracza == 2)
+				RozgrywkaInsert(*ptura, "Gracz 2", wpisaneSlowo, punkty);
+			else
+				RozgrywkaInsert(*ptura, "Gracz", wpisaneSlowo, punkty);
+
+			if (nrGracza == 2)
+				punktyKomputera += punkty;
+			else
+				punktyGracza += punkty;
+
+			if (nrGracza == 2)
+				SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
+			else
+				SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_GRACZA, punktyGracza, true);
+
+			if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow && nrGracza == 1)
+			{
+				MessageBox(hwnd, "Wygral Gracz 1", "Ha!", MB_ICONINFORMATION);
+				ExitProcess(1);
+			}
+			else if (graDoLiczbyPunktow != -1 && punktyKomputera >= graDoLiczbyPunktow && nrGracza == 2)
+			{
+				MessageBox(hwnd, "Wygral Gracz 2", "Ha!", MB_ICONINFORMATION);
+				ExitProcess(1);
+			}
+			else if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow && nrGracza == 0)
 			{
 				MessageBox(hwnd, "Wygral Gracz ", "Ha!", MB_ICONINFORMATION);
 				ExitProcess(1);
 			}
+
 			if (graDoTury != -1 && *ptura > graDoTury)
 			{
 				MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
 				ExitProcess(1);
 			} 
 			SetWindowText(textBoxWpisaneSlowo, (""));
-			///Wyczyœciæ pole wpisaneSlowo
-			WymienLiteryGraczaMain();
+			WymienLiteryGracza();
+			iloscWymianLiter = 3;
 			return true;
 		}
 		else
 		{
-			MessageBox(hwnd, "Nie ma takiego slowa", "Ha!", MB_ICONINFORMATION);
+			MessageBox(hwnd, "Nie istnieje takie s³owo.", "S³owo nie istnieje", MB_ICONINFORMATION);
 			return false;
 		}
 	}
@@ -206,7 +269,8 @@ void PominRuch(HWND hwnd)
 {
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
 	RozgrywkaInsert(*ptura, "gracz", ("( " + strLiteryGracza + ")"), 0);
-	WymienLiteryGraczaMain();
+	iloscWymianLiter = 3; 
+	WymienLiteryGracza();
 	RuchKomputera(hwnd);
 }
 
@@ -447,7 +511,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		if ((HWND)lParam == buttonWymienLiterki) 
 		{
-			WymienLiteryGraczaMain();
+			if (iloscWymianLiter > 0)
+			{
+				WymienLiteryGracza();
+				iloscWymianLiter--;
+			}
+			else
+			{
+				MessageBox(hwnd, "Nie mo¿na ju¿ wymieniæ liter.", "Wymiana liter.", MB_ICONINFORMATION); \
+			}
 		}
 
 		if ((HWND)lParam == buttonZatwierdz)
@@ -457,20 +529,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			switch (trybGry)
 			{
 			case 1:
-				if (RuchGracza(hwnd))
+				if (RuchGracza(hwnd, 0))
 				{
 					RuchKomputera(hwnd);
 				}
 				break;
-
+			case 2:
+				int graczNr;
+				if (*ptura % 2 == 1)
+  					graczNr = 1;
+				else
+					graczNr = 2;
+				RuchGracza(hwnd, graczNr);
+				break;
 
 			}
 		}
 		if ((HWND)lParam == buttonPomin)
 		{
 			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
-			SetWindowText(textBoxWpisaneSlowo, (""));
-			PominRuch(hwnd);
+
+				SetWindowText(textBoxWpisaneSlowo, (""));
+				if (trybGry == 1)
+					PominRuch(hwnd);
 		}
 
 		if ((HWND)lParam == buttonOK)
@@ -522,14 +603,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					wybranoTrybGry = true;
 				}
 
-				if (wybranoTrybGry && wybranoTuryLubPunkty)
+				if (wybranoTrybGry && wybranoTuryLubPunkty) 
+				{
 					ShowWindow(hwnd, SW_HIDE);
 
-				if (trybGry == 3)
-				{
-					while (true)
-						RuchKomputera(hwnd);
+					if (trybGry == 3)
+					{
+						SetWindowText(staticTextEtykietaPunktyGracza, "Punkty Komputera BF:");
+						ShowWindow(buttonPomin, SW_HIDE);
+						ShowWindow(buttonWymienLiterki, SW_HIDE);
+						ShowWindow(buttonZatwierdz, SW_HIDE);
+						ShowWindow(textBoxWpisaneSlowo, SW_HIDE);
+						ShowWindow(staticTextEtykietaTwojeLitery, SW_HIDE);
+						ShowWindow(staticTextTwojeLitery, SW_HIDE);
+						while (true)
+						{
+							RuchKomputera(hwnd);
+							LockWindowUpdate(hwnd);
+							RuchKomputeraBruteForce(hwnd); 
+							RedrawWindow(staticTextPunktyKomputera, NULL, NULL, RDW_ERASE);
+							ShowWindow(staticTextPunktyKomputera, SW_HIDE);
+							ShowWindow(staticTextPunktyKomputera, SW_SHOW);
+							SendMessage(buttonZatwierdz, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
+							SendMessage(buttonZatwierdz, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
 
+						}
+					}
 				}
 			}
 		}
