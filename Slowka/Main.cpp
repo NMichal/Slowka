@@ -269,7 +269,7 @@ void PominRuch(HWND hwnd)
 {
 	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
 	if (trybGry == 1)
-		RozgrywkaInsert(*ptura, "gracz", ("( " + strLiteryGracza + ")"), 0);
+		RozgrywkaInsert(*ptura, "Gracz", ("( " + strLiteryGracza + ")"), 0);
 	else 
 	{
 		int graczNr;
@@ -632,16 +632,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						ShowWindow(staticTextTwojeLitery, SW_HIDE);
 						while (true)
 						{
-							RuchKomputera(hwnd);
-							LockWindowUpdate(hwnd);
-							RuchKomputeraBruteForce(hwnd); 
-							RedrawWindow(staticTextPunktyKomputera, NULL, NULL, RDW_ERASE);
+							RuchKomputera(hwnd);							
+							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
+							MessageBox(hwnd, "Komputer u³o¿y³ s³owo.", "Ha!", MB_ICONINFORMATION);
+							RuchKomputeraBruteForce(hwnd); 							
+							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyGracza, true);
+							MessageBox(hwnd, "Komputer Brute Force u³o¿y³ s³owo.", "Ha!", MB_ICONINFORMATION);							
+							//RedrawWindow(staticTextPunktyKomputera, NULL, NULL, RDW_ERASE);
 							ShowWindow(staticTextPunktyKomputera, SW_HIDE);
-							ShowWindow(staticTextPunktyKomputera, SW_SHOW);
-							SendMessage(buttonZatwierdz, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(0, 0));
-							SendMessage(buttonZatwierdz, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(0, 0));
-
+							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
+							ShowWindow(staticTextPunktyKomputera, SW_SHOW);							
 						}
+					}
+					else if (trybGry == 2) 
+					{
+						SetWindowText(staticTextEtykietaPunktyGracza, "Punkty Gracza 1:");
+						SetWindowText(staticTextEtykietaPunktyKomputera, "Punkty Gracza 2:");
 					}
 				}
 			}
