@@ -45,68 +45,6 @@ bool CzyMoznaUtworzycSlowo(string slowo, string litery)
 	return true;
 }
 
-
-//string KomputerUkladaSlowo(string wylosowaneLitery)
-//{
-//	//pierwsze mozliwe
-//	//ifstream file("slowa.txt");
-//	//if (file.is_open()) {
-//	//	for (int i = 0; i < 2791036; ++i)
-//	//	{
-//	//		string temp;
-//	//		file >> temp;
-//	//		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
-//	//			return temp;
-//	//	}
-//	//}
-//
-//	//najdluzsze
-//	//ifstream file("slowa.txt");
-//	//int len = 0;
-//	//string slowo = "";
-//	//if (file.is_open()) {
-//	//	for (int i = 0; i < 2791036; ++i)
-//	//	{
-//	//		string temp;
-//	//		file >> temp;
-//	//		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
-//	//		{
-//	//			if (temp.length() > len) 
-//	//			{
-//	//				len = temp.length();
-//	//				slowo = temp;
-//	//			}
-//	//		}
-//	//			
-//	//	}
-//	//	return slowo;
-//	//}
-//
-//	//najlepiej punktowane
-//	//ifstream file("slowa.txt");
-//	//int punkty = 0;
-//	//string slowo = "";
-//	//if (file.is_open()) {
-//	//	for (int i = 0; i < 2791036; ++i)
-//	//	{
-//	//		string temp;
-//	//		file >> temp;
-//	//		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
-//	//		{
-//	//			int pkt = PunktujSlowo(temp);
-//	//			if(pkt > punkty)
-//	//			{
-//	//				punkty = pkt;
-//	//				slowo = temp;
-//	//			}
-//	//		}
-//
-//	//	}
-//	//	return slowo;
-//	//}
-//}
-
-
 int PunktujSlowo(string slowo)
 {
 	int punkty = 0;

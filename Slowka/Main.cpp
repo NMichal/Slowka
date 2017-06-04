@@ -20,11 +20,6 @@ using namespace std;
 #define ID_RADIO_CVSC 17
 
 
-//Pozmieniaæ teksty okien 
-// Jakieœ komunikaty
-//wylaczyc maksymalizacje
-// byæ mo¿e póŸniej dodaæ ID_PRZYCISKOW 
-
 list<char> literyKomputera;
 list<char> literyGracza;
 int punktyKomputera = 0;
@@ -33,7 +28,7 @@ int tura = 1;
 int *ptura = &tura;
 int graDoTury = -1;
 int graDoLiczbyPunktow = -1;
-int trybGry = -1; //1 - PVsC, 2 - PVsP, 3 - CVsC
+int trybGry = -1;
 int iloscWymianLiter = 3;
 
 
@@ -59,7 +54,7 @@ HWND staticTextEtykietaPunktyKomputera;
 HWND staticTextPunktyKomputera;
 RECT rcl; // list view bo nale¿y co grupy Common Controls
 
-//elementy DW
+//elementy Dialog Window
 HWND buttonOK;
 HWND textBoxLiczbaTurPunktow;
 HWND staticTextTuryPunkty;
@@ -99,7 +94,7 @@ void RozgrywkaInsert(int tura, string osoba, string slowo, int punkty)
 	(*ptura)++;
 }
 
-///Zmieniæ na jedn¹ funkcjê dla gracza i PC (chocia¿ dla wielu graczy beda tylko jedne zmieniajace sie litery) oraz przeniesc do pliku Gra.cpp
+
 void WymienLiteryGracza()
 {
 	literyGracza.clear();
@@ -117,7 +112,7 @@ void RuchKomputera(HWND hwnd)
 {
 	literyKomputera.clear();
 
-	while (literyKomputera.size() < 9)	//Wymiana liter przed ruchem PC
+	while (literyKomputera.size() < 9)
 		literyKomputera.push_back(LosujLitere());
 
 	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyKomputera);
@@ -128,7 +123,7 @@ void RuchKomputera(HWND hwnd)
  	}
 
 	if(trybGry != 3)
-		MessageBox(hwnd, "Teraz Komputer ", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Teraz Komputer ", "Ruch komputera.", MB_ICONINFORMATION);
 
 	string ulozoneSlowo = slownik.KomputerUkladaSlowo(strLiteryKomputera);
 	int punkty = PunktujSlowo(ulozoneSlowo);
@@ -138,12 +133,12 @@ void RuchKomputera(HWND hwnd)
 	SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
 	if (graDoLiczbyPunktow != -1 && punktyKomputera >= graDoLiczbyPunktow) 
 	{
-		MessageBox(hwnd, "Wygral Komputer ", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Wygral Komputer ", "Koniec gry.", MB_ICONINFORMATION);
 		ExitProcess(1);
 	}
 	if (graDoTury != -1 && *ptura > graDoTury)
 	{
-		MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Koniec gry.", "Koniec gry.", MB_ICONINFORMATION);
 		ExitProcess(1);
 	}
 }
@@ -153,7 +148,7 @@ void RuchKomputeraBruteForce(HWND hwnd)
 {
 	literyGracza.clear();
 
-	while (literyGracza.size() < 9)	//Wymiana liter przed ruchem PC
+	while (literyGracza.size() < 9)
 		literyGracza.push_back(LosujLitere());
 
 	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyGracza);
@@ -173,12 +168,12 @@ void RuchKomputeraBruteForce(HWND hwnd)
 	ShowWindow(staticTextPunktyGracza, SW_SHOW);
 	if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow)
 	{
-		MessageBox(hwnd, "Wygral Komputer Brute Force", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Wygral Komputer Brute Force", "Koniec gry.", MB_ICONINFORMATION);
 		ExitProcess(1);
 	}
 	if (graDoTury != -1 && *ptura > graDoTury)
 	{
-		MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Koniec gry.", "Koniec gry.", MB_ICONINFORMATION);
 		ExitProcess(1);
 	}
 }
@@ -203,7 +198,7 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 		bool istniejeSlowo = slownik.SprawdzSlowo(wpisaneSlowo);
 		if (istniejeSlowo)
 		{
-			MessageBox(hwnd, "Istnieje takie s³owo !!! ", "Ha!", MB_ICONINFORMATION);
+			MessageBox(hwnd, "Istnieje takie s³owo!", "Komunikat", MB_ICONINFORMATION);
 			int punkty = PunktujSlowo(wpisaneSlowo);
 			string literyDoWysietlenia = LiteryDoWyswietlenia(literyGracza);
 			wpisaneSlowo += " ( " + literyDoWysietlenia + ")";
@@ -226,23 +221,23 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 
 			if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow && nrGracza == 1)
 			{
-				MessageBox(hwnd, "Wygral Gracz 1", "Ha!", MB_ICONINFORMATION);
+				MessageBox(hwnd, "Wygral Gracz 1", "Koniec gry.", MB_ICONINFORMATION);
 				ExitProcess(1);
 			}
 			else if (graDoLiczbyPunktow != -1 && punktyKomputera >= graDoLiczbyPunktow && nrGracza == 2)
 			{
-				MessageBox(hwnd, "Wygral Gracz 2", "Ha!", MB_ICONINFORMATION);
+				MessageBox(hwnd, "Wygral Gracz 2", "Koniec gry.", MB_ICONINFORMATION);
 				ExitProcess(1);
 			}
 			else if (graDoLiczbyPunktow != -1 && punktyGracza >= graDoLiczbyPunktow && nrGracza == 0)
 			{
-				MessageBox(hwnd, "Wygral Gracz ", "Ha!", MB_ICONINFORMATION);
+				MessageBox(hwnd, "Wygral Gracz ", "Koniec gry.", MB_ICONINFORMATION);
 				ExitProcess(1);
 			}
 
 			if (graDoTury != -1 && *ptura > graDoTury)
 			{
-				MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+				MessageBox(hwnd, "Koniec gry.", "Koniec gry.", MB_ICONINFORMATION);
 				ExitProcess(1);
 			} 
 			SetWindowText(textBoxWpisaneSlowo, (""));
@@ -252,13 +247,13 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 		}
 		else
 		{
-			MessageBox(hwnd, "Nie istnieje takie s³owo.", "S³owo nie istnieje", MB_ICONINFORMATION);
+			MessageBox(hwnd, "Nie istnieje takie s³owo.", "Komunikat", MB_ICONINFORMATION);
 			return false;
 		}
 	}
 	else
 	{
-		MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Ha!", MB_ICONINFORMATION);
+		MessageBox(hwnd, "Z wylosowanych liter nie mo¿na utworzyæ takiego s³owa.", "Komunikat", MB_ICONINFORMATION);
 		return false;
 	}
 }
@@ -324,7 +319,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 
-	//DIALOG WINDOW
+	// DIALOG WINDOW
 	// WYPE£NIANIE STRUKTURY
 	WNDCLASSEX dw; //dialog window
 	LPSTR NazwaWd = "Wd";
@@ -403,17 +398,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		100, 200, 180, 30,
 		DialogWindow, (HMENU)ID_RADIO_CVSC,
 		GetModuleHandle(NULL), 0);
-
-
 	////----------------End Elementy DW-----------------------/////////
+
 	buttonWymienLiterki = CreateWindowEx(0, "BUTTON", "Wymieñ literki", WS_CHILD | WS_VISIBLE,
-		550, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+		550, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); 
 
 	buttonZatwierdz = CreateWindowEx(0, "BUTTON", "Zatwierdz", WS_CHILD | WS_VISIBLE,
-		350, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+		350, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); 
 
 	buttonPomin = CreateWindowEx(0, "BUTTON", "Pomin ruch", WS_CHILD | WS_VISIBLE,
-		750, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); //hwnd - nasz uchyt okna g³ównego
+		750, 600, 150, 30, OknoAplikacji, NULL, hInstance, NULL); 
 
 	textBoxWpisaneSlowo = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
 		50, 600, 250, 30, OknoAplikacji, NULL, hInstance, NULL);
@@ -467,7 +461,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ListView_InsertColumn(listViewRozgrywka, 2, &lvc);
 
 	lvc.iSubItem = 3;
-	lvc.cx = 55;  // zmniejszone ¿eby siê nie pojawia³ scroll poziomy
+	lvc.cx = 55;  
 	lvc.pszText = "Punkty";
 	ListView_InsertColumn(listViewRozgrywka, 3, &lvc);
 #pragma endregion Kolumny w listView
@@ -489,15 +483,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWindowText(staticTextTwojeLitery, lpcstr);
 
 
-	//------------------------------------------------------------------------------------------------------------------------------
-	ShowWindow(OknoAplikacji, nCmdShow); // Poka¿ okienko...
+	ShowWindow(OknoAplikacji, nCmdShow); 
 	UpdateWindow(OknoAplikacji);
 
-	ShowWindow(DialogWindow, nCmdShow); // Poka¿ okienko DW
+	ShowWindow(DialogWindow, nCmdShow); 
 	UpdateWindow(DialogWindow);
 
-	// Pêtla komunikatów - klikniêcie myszk¹, wciœniêcie klawisza czy zamkniêcie okna
-	while (GetMessage(&Komunikat, NULL, 0, 0)) // Gdy robimy jak¹œ czynnoœæ, która wi¹¿e siê z powstaniem jakiejœ wiadomoœci, np. poruszamy mysz¹, wiadomoœæ posy³ana jest do kolejki wiadomoœci, sk¹d zabiera j¹ GetMessage. 
+	while (GetMessage(&Komunikat, NULL, 0, 0))
 	{
 		TranslateMessage(&Komunikat);
 		DispatchMessage(&Komunikat);
@@ -505,7 +497,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return Komunikat.wParam;
 }
 
-// OBS£UGA ZDARZEÑ - funkcja zajmie siê w³aœciw¹ obs³ug¹ komunikatów systemu, czyli np. reakcj¹ na wciskanie ró¿nych klawiszy
+// OBS£UGA ZDARZEÑ
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -517,7 +509,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-	case WM_COMMAND://obs³uga naszego przycisku buttonWymienLiterki
+	case WM_COMMAND:
 
 		if ((HWND)lParam == buttonWymienLiterki) 
 		{
@@ -534,8 +526,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		if ((HWND)lParam == buttonZatwierdz)
 		{
-			MessageBox(hwnd, "Nacisn¹³eœ przycisk Zatwierdz!", "Ha!", MB_ICONINFORMATION);
-			//1 = pvc, 2 - pvp
 			switch (trybGry)
 			{
 			case 1:
@@ -557,13 +547,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		if ((HWND)lParam == buttonPomin)
 		{
-			MessageBox(hwnd, "Nacisnales pomin.", "Ha!", MB_ICONINFORMATION);
-
 				SetWindowText(textBoxWpisaneSlowo, (""));
 				PominRuch(hwnd);
 				if (graDoTury != -1 && *ptura > graDoTury)
 				{
-					MessageBox(hwnd, "Koniec gry.", "Ha!", MB_ICONINFORMATION);
+					MessageBox(hwnd, "Koniec gry.", "Koniec gry.", MB_ICONINFORMATION);
 					ExitProcess(1);
 				}
 		}
@@ -583,14 +571,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 				if (IsDlgButtonChecked(hwnd, ID_RADIO_PUNKTY) == BST_CHECKED)
 				{
-					MessageBox(NULL, "Zaznaczono na liczbe punktow", "Dziala !", MB_OK);
 					graDoTury = -1;
 					graDoLiczbyPunktow = lbTurLubPkt;
 					wybranoTuryLubPunkty = true;
 				}
 				else if (IsDlgButtonChecked(hwnd, ID_RADIO_TURY) == BST_CHECKED)
 				{
-					MessageBox(NULL, "Zaznaczono na liczbe tur", "Dziala !", MB_OK);
 					if (lbTurLubPkt % 2 == 1)
 					{
 						lbTurLubPkt += 1;
@@ -604,7 +590,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					trybGry = 1;
 					wybranoTrybGry = true;
-					MessageBox(hwnd, "Rozpoczyna gracz.", "Ha!", MB_ICONINFORMATION);
+					MessageBox(hwnd, "Rozpoczyna gracz.", "Komunikat", MB_ICONINFORMATION);
 				}
 				else if (IsDlgButtonChecked(hwnd, ID_RADIO_PVSP) == BST_CHECKED)
 				{
@@ -634,14 +620,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						{
 							RuchKomputera(hwnd);							
 							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
-							MessageBox(hwnd, "Komputer u³o¿y³ s³owo.", "Ha!", MB_ICONINFORMATION);
+							MessageBox(hwnd, "Komputer u³o¿y³ s³owo.", "U³o¿ono s³owo", MB_ICONINFORMATION);
 							RuchKomputeraBruteForce(hwnd); 							
 							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyGracza, true);
-							MessageBox(hwnd, "Komputer Brute Force u³o¿y³ s³owo.", "Ha!", MB_ICONINFORMATION);							
-							//RedrawWindow(staticTextPunktyKomputera, NULL, NULL, RDW_ERASE);
-							ShowWindow(staticTextPunktyKomputera, SW_HIDE);
-							SetDlgItemInt(hwnd, ID_ETYKIETA_PUNKTY_KOMPUTERA, punktyKomputera, true);
-							ShowWindow(staticTextPunktyKomputera, SW_SHOW);							
+							MessageBox(hwnd, "Komputer Brute Force u³o¿y³ s³owo.", "U³o¿ono s³owo", MB_ICONINFORMATION);									
 						}
 					}
 					else if (trybGry == 2) 
@@ -655,8 +637,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	default:
-		return DefWindowProc(hwnd, msg, wParam, lParam); // inne odsy³amy dalej - do funkcji DefWindowProc, która zajmie siê ich domyœln¹ obs³ug¹.
+		return DefWindowProc(hwnd, msg, wParam, lParam); 
 	}
-
 	return 0;
 }
