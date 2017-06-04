@@ -11,8 +11,6 @@
 
 using namespace std;
 
-
-
 string Slownik::listaSlow[LICZBA_SLOW];
 void Slownik::ZaczytajSlownik()
 {
@@ -52,9 +50,9 @@ string Slownik::KomputerUkladaSlowo(string wylosowaneLitery)
 		string temp;
 		unsigned long long int i = (rand() + rand()+ rand()+ rand()+ rand()+ rand()+rand()+rand()) % LICZBA_SLOW;
 		temp = Slownik::listaSlow[i];
-		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
+		if (Gra::CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
 		{
-			int pkt = PunktujSlowo(temp);
+			int pkt = Gra::PunktujSlowo(temp);
 			if (pkt > punkty)
 			{
 				punkty = pkt;
@@ -77,9 +75,9 @@ string Slownik::KomputerUkladaSlowoBruteForce(string wylosowaneLitery)
 	{
 		string temp;
 		temp = Slownik::listaSlow[i];
-		if (CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
+		if (Gra::CzyMoznaUtworzycSlowo(temp, wylosowaneLitery))
 		{
-			int pkt = PunktujSlowo(temp);
+			int pkt = Gra::PunktujSlowo(temp);
 			if (pkt > punkty)
 			{
 				punkty = pkt;

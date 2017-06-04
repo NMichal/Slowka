@@ -16,7 +16,7 @@ using namespace std;
 
 char litery[] = { 'a', 'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','r','s','t','u','w','y','z' };
 
-char LosujLitere()
+char Gra::LosujLitere()
 {
 
 	int index = rand() % 23;
@@ -35,7 +35,7 @@ int ZliczLitery(string tekst, char litera)
 }
 
 //Funkcja sprawdza czy mo¿na utworzyæ wpisane s³owo z posiadanych liter
-bool CzyMoznaUtworzycSlowo(string slowo, string litery) 
+bool Gra::CzyMoznaUtworzycSlowo(string slowo, string litery)
 {
 	for (int i = 0; i < slowo.size(); i++)
 	{
@@ -45,7 +45,7 @@ bool CzyMoznaUtworzycSlowo(string slowo, string litery)
 	return true;
 }
 
-int PunktujSlowo(string slowo)
+int Gra::PunktujSlowo(string slowo)
 {
 	int punkty = 0;
 	for (int i = 0; i < slowo.size(); i++)
@@ -67,7 +67,7 @@ int PunktujSlowo(string slowo)
 }
 
 
-string LiteryDoWyswietlenia(list<char> litery)
+string Gra::LiteryDoWyswietlenia(list<char> litery)
 {
 	string strLitery = "";
 	for (auto v : litery)

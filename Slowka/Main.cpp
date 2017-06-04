@@ -34,6 +34,7 @@ int iloscWymianLiter = 3;
 
 
 Slownik slownik;
+Gra gra;
 LPSTR NazwaKlasy = "Klasa Okienka";
 MSG Komunikat;
 
@@ -100,9 +101,9 @@ void WymienLiteryGracza()
 	literyGracza.clear();
 
 	while (literyGracza.size() < 9)
-		literyGracza.push_back(LosujLitere());
+		literyGracza.push_back(Gra::LosujLitere());
 
-	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
+	string strLiteryGracza = Gra::LiteryDoWyswietlenia(literyGracza);
 
 	LPCSTR lpcstr = strLiteryGracza.c_str();
 	SetWindowText(staticTextTwojeLitery, lpcstr);
@@ -113,9 +114,9 @@ void RuchKomputera(HWND hwnd)
 	literyKomputera.clear();
 
 	while (literyKomputera.size() < 9)
-		literyKomputera.push_back(LosujLitere());
+		literyKomputera.push_back(Gra::LosujLitere());
 
-	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyKomputera);
+	string literyKomputeraDoWyswietlenia = Gra::LiteryDoWyswietlenia(literyKomputera);
 	string strLiteryKomputera = "";
 	for (auto v : literyKomputera)
 	{
@@ -126,7 +127,7 @@ void RuchKomputera(HWND hwnd)
 		MessageBox(hwnd, "Teraz Komputer ", "Ruch komputera.", MB_ICONINFORMATION);
 
 	string ulozoneSlowo = slownik.KomputerUkladaSlowo(strLiteryKomputera);
-	int punkty = PunktujSlowo(ulozoneSlowo);
+	int punkty = Gra::PunktujSlowo(ulozoneSlowo);
 	ulozoneSlowo += " ( " + literyKomputeraDoWyswietlenia + ")";
 	RozgrywkaInsert(*ptura, "Komputer", ulozoneSlowo, punkty);
 	punktyKomputera += punkty;
@@ -149,9 +150,9 @@ void RuchKomputeraBruteForce(HWND hwnd)
 	literyGracza.clear();
 
 	while (literyGracza.size() < 9)
-		literyGracza.push_back(LosujLitere());
+		literyGracza.push_back(Gra::LosujLitere());
 
-	string literyKomputeraDoWyswietlenia = LiteryDoWyswietlenia(literyGracza);
+	string literyKomputeraDoWyswietlenia = Gra::LiteryDoWyswietlenia(literyGracza);
 	string strLiteryKomputera = "";
 	for (auto v : literyGracza)
 	{
@@ -159,7 +160,7 @@ void RuchKomputeraBruteForce(HWND hwnd)
 	}
 
 	string ulozoneSlowo = slownik.KomputerUkladaSlowoBruteForce(strLiteryKomputera);
-	int punkty = PunktujSlowo(ulozoneSlowo);
+	int punkty = Gra::PunktujSlowo(ulozoneSlowo);
 	ulozoneSlowo += " ( " + literyKomputeraDoWyswietlenia + ")";
 	RozgrywkaInsert(*ptura, "Komputer BF", ulozoneSlowo, punkty);
 	punktyGracza += punkty;
@@ -193,14 +194,14 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 		strLiteryGracza += v;
 	}
 
-	if (CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
+	if (Gra::CzyMoznaUtworzycSlowo(wpisaneSlowo, strLiteryGracza))
 	{
 		bool istniejeSlowo = slownik.SprawdzSlowo(wpisaneSlowo);
 		if (istniejeSlowo)
 		{
 			MessageBox(hwnd, "Istnieje takie s³owo!", "Komunikat", MB_ICONINFORMATION);
-			int punkty = PunktujSlowo(wpisaneSlowo);
-			string literyDoWysietlenia = LiteryDoWyswietlenia(literyGracza);
+			int punkty = Gra::PunktujSlowo(wpisaneSlowo);
+			string literyDoWysietlenia = Gra::LiteryDoWyswietlenia(literyGracza);
 			wpisaneSlowo += " ( " + literyDoWysietlenia + ")";
 			if(nrGracza == 1)	
 				RozgrywkaInsert(*ptura, "Gracz 1", wpisaneSlowo, punkty);
@@ -262,7 +263,7 @@ bool RuchGracza(HWND hwnd, int nrGracza)
 
 void PominRuch(HWND hwnd)
 {
-	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
+	string strLiteryGracza = Gra::LiteryDoWyswietlenia(literyGracza);
 	if (trybGry == 1)
 		RozgrywkaInsert(*ptura, "Gracz", ("( " + strLiteryGracza + ")"), 0);
 	else 
@@ -472,12 +473,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	srand(time(NULL));
 	while (literyKomputera.size() < 9)
-		literyKomputera.push_back(LosujLitere());
+		literyKomputera.push_back(Gra::LosujLitere());
 
 	while (literyGracza.size() < 9)
-		literyGracza.push_back(LosujLitere());
+		literyGracza.push_back(Gra::LosujLitere());
 
-	string strLiteryGracza = LiteryDoWyswietlenia(literyGracza);
+	string strLiteryGracza = Gra::LiteryDoWyswietlenia(literyGracza);
 
 	LPCSTR lpcstr = strLiteryGracza.c_str();
 	SetWindowText(staticTextTwojeLitery, lpcstr);
